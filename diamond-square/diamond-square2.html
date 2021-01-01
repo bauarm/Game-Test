@@ -41,8 +41,8 @@ function minmaxRand(min, max) {
   let wd = Math.floor(window.innerWidth/grid)*grid;//ширна видимой части экрана (сцены) кратная размеру клетки (1536/32=48 клеток)
 	let hg =Math.floor(window.innerHeight/grid)*grid;//высота видимой части экрана (сцены) кратная размеру клетки (768/32=24 клетки)
 	
-	let sizeSceneX=grid*40;//ширина сцены 
-  let sizeSceneY=grid*28///высота сцены
+	let sizeSceneX=grid*17;//ширина сцены 
+  let sizeSceneY=grid*17///высота сцены
 
   let sceneCellAmountX=sizeSceneX/grid;//количество клеток по ширине
   let sceneCellAmountY=sizeSceneY/grid;//количество клеток по высоте
@@ -54,52 +54,9 @@ function minmaxRand(min, max) {
 	
 	const ctx = canvas.getContext('2d');
    
-	//513
-    
- //3 5 9 17 33 65 129 257 513
-    
-let shetprohov =(a)=>{//shetprohov(17)
-  arrSize=[3,5,9,17,33,65,129,257,513];
-  let b=2;  
-    for(let i=0;i<arrSize.length;i++)
-    {
-      if(arrSize[i]==a)
-      {
-        for(let j=i;j>=0;j--)
-        {
-          if(arrSize[j]==a){
-            //console.log('Размер поля '+arrSize[j], 'Проходов '+b,'Середина поля '+ findhalf(arrSize[j]));
-            firststep(arrSize[j],findhalf(arrSize[j]),drawResult);
-            //console.log((a/2)+0.5)
-            b=b*2;
-          }
-          if(arrSize[j]==(a/2)+0.5){
-            //console.log('Размер поля '+arrSize[j], 'Проходов '+b,'Середина поля '+ findhalf(arrSize[j]));
-            twostep(arrSize[j],findhalf(arrSize[j]),b,drawResult);
-            b=b*2;
-          }
+	
 
-          /*
-          else{
-          //console.log(arrSize[j]);
-          b=b*2;
-          console.log('Размер поля '+arrSize[j], 'Проходов '+b,'Середина поля '+ findhalf(arrSize[j]));
-          //firststep(arrSize[j],findhalf(arrSize[j]),drawResult);
-          twostep(arrSize[j],findhalf(arrSize[j]),b,drawResult)
-          }*/
-        }
-      }
-    }
-  return 'end';
-};
 
-let findhalf =(a)=>{//findhalf()
-  let b=(a/2)+0.5;
-  return b;
-    
-};
-// 129/1 65/4 33/16 17/32 9/64 5/128 3/256
-//Создание матрицы ландшафта
 (()=>{
     for(i=0;i<17;i++)
     {
@@ -111,10 +68,6 @@ let findhalf =(a)=>{//findhalf()
 		}
 })();
 //console.log(arr); //вывод матрицы в консолль
-
-
-
-
 
 // Отрисовка поля по ранее созданной матрице	
 
@@ -128,130 +81,18 @@ let drawField =()=>{
 };
 
 
-let iter=1;
 
-let firststep =(a,b,fn)=>{ //firststep(drawResult)
-  
-  arr[0][0]=minmaxRand(0, 255); // [x][y] [g][v]
-  arr[0][a-1]=minmaxRand(0, 255);
-  arr[a-1][0]=minmaxRand(0, 255);
-  arr[a-1][a-1]=minmaxRand(0, 255);
-  
-  arr[b-1][b-1]= Math.floor((arr[0][0]+arr[0][a-1]+arr[a-1][0]+arr[a-1][a-1])/4);
-
-
-  arr[0][b-1]=Math.floor((arr[0][0]+arr[0][a-1]+arr[b-1][b-1])/3);
-
-  arr[b-1][0]=Math.floor((arr[0][0]+arr[a-1][0]+arr[b-1][b-1])/3);
-
-  arr[a-1][b-1]=Math.floor((arr[a-1][0]+arr[a-1][a-1]+arr[b-1][b-1])/3);
-  
-  arr[b-1][a-1]=Math.floor((arr[0][a-1]+arr[a-1][a-1]+arr[b-1][b-1])/3);
-
-  //arr[0][b-1]=Math.floor((arr[0][0]+arr[a-1][0]+arr[b-1][b-1]+minmaxRand(0, 255))/4);
-  /*
-  var getColor = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
-  itog.style.backgroundColor = getColor;
-*/
-  return fn();
-};
-
-
-let twostepTest =(a,b,c,fn)=>{ //firststep(drawResult) c-колво итераций
-  
-  // [x][y] [g][v]
-  for(let i=0;i<c/2;i++)
-  {
-    for(let j=0;j<c/2;j++)
-    {
-      if(c==4){
-      ctx.strokeStyle = "green";
-      ctx.lineWidth = 6;
-      ctx.strokeRect(i*((a*grid)), j*((a*grid)), a*grid, a*grid);
-      }
-      if(c==8){
-      ctx.strokeStyle = "red";
-      ctx.lineWidth = 4;
-      ctx.strokeRect(i*((a*grid)), j*((a*grid)), a*grid, a*grid);
-      }
-      if(c==16){
-      ctx.strokeStyle = "blue";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(i*((a*grid)), j*((a*grid)), a*grid, a*grid);
-      }
-    }
-  }
-}
-
-
-let twostep =(a,b,c,fn)=>{ //firststep(drawResult) c-колво итераций
-  
-  console.log(a,b,c)
-  // [x][y] [g][v]
-  let start=0;
-  let endp=a-1;
-  for(let i=0;i<c/2;i++)
-  {
-    for(let j=0;j<c/2;j++)
-    {
-    
-      console.log(i,j)
-      if(arr[start][start]==0)
-      {
-        arr[start][start]=minmaxRand(0, 255);
-      } 
-      if(arr[start][endp]==0)
-      {
-        arr[start][endp]=minmaxRand(0, 255);
-      } 
-      if(arr[endp][start]==0)
-      {
-        arr[endp][start]=minmaxRand(0, 255);
-      } 
-      if(arr[endp][endp]==0)
-      {
-        arr[endp][endp]=minmaxRand(0, 255);;
-      } 
-
-      arr[b-1][b-1]= Math.floor((arr[start][start]+arr[start][a-1]+arr[endp][start]+arr[endp][endp])/4);
-
-  
-      arr[start][b-1]=Math.floor((arr[start][start]+arr[start][a-1]+arr[b-1][b-1]+minmaxRand(0, 255))/4);
-
-      arr[b-1][start]=Math.floor((arr[start][start]+arr[endp][start]+arr[b-1][b-1]+minmaxRand(0, 255))/4);
-
-      arr[a-1][b-1]=Math.floor((arr[endp][start]+arr[endp][endp]+arr[b-1][b-1]+minmaxRand(0, 255))/4);
-  
-      arr[b-1][a-1]=Math.floor((arr[start][endp]+arr[endp][a-1]+arr[b-1][b-1]+minmaxRand(0, 255))/4);
-
-      start=start+endp;
-      //console.log(start);
-
-      endp=endp*2;
-      //console.log(endp);
-
-      b=b*2;
-      fn();
-    }
-  }  
-  //arr[0][b-1]=Math.floor((arr[0][0]+arr[a-1][0]+arr[b-1][b-1]+minmaxRand(0, 255))/4);
-  /*
-  var getColor = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
-  itog.style.backgroundColor = getColor;
-*/
-      
-};
 
 
 
 let newTest =(n)=>{ //newTest()
-  let arrSize=arr.length;
+  let arrSize=arr.length-1;
   
   
   
   let round=n-1;
   
-  let scope=16;
+  let scope=n-1;
 
   //console.log(arrSize,round);
   
@@ -263,7 +104,7 @@ let newTest =(n)=>{ //newTest()
       {
         arr[i][j]=minmaxRand(1, 255);
         
-        //onsole.log('x '+i,'y '+j)
+       
 
       }
     }
@@ -278,7 +119,7 @@ let newTest =(n)=>{ //newTest()
     {
       if(arr[i][j]==0)
       {
-        arr[i][j]=Math.floor((arr[i+center][j+center]+arr[i-center][j-center]+arr[i+center][j-center]+arr[i-center][j+center])/4)+minmaxRand(1, 10)
+        arr[i][j]=Math.floor((arr[i+center][j+center]+arr[i-center][j-center]+arr[i+center][j-center]+arr[i-center][j+center])/4)
         //arr[i][j]=arr[i+round/2][j+round/2]; //nijniy right
         //arr[i][j]=arr[i-round/2][j-round/2]; //verhniy left
         //arr[i][j]=arr[i+round/2][j-round/2]; // verhniy right
@@ -298,10 +139,10 @@ let newTest =(n)=>{ //newTest()
   {
     for(j=0;j<arrSize-center;j+=center)
     {
-      console.log('x '+(i+center),'y '+j)
+      
       if(arr[i+center][j]==0 && arr[i][j+center]==0)
       {
-        
+        //console.log(arrSize)
         //arr[i][j]verhleft
         //arr[center][center] center
         //arr[round][j];verhright for i<center
@@ -310,18 +151,88 @@ let newTest =(n)=>{ //newTest()
         //arr[i-center][round] bottom left for i>center
         //arr[round][round] nizright
         
-        if(i<center || j<center)
+        
+
+        if(i==0)
         {
-          arr[i+center][j]=Math.floor((arr[i][j]+arr[center][center]+arr[round][j])/3)+minmaxRand(1, 10);//verh
-          arr[i][j+center]=Math.floor((arr[i][j]+arr[center][center]+arr[i][round])/3)+minmaxRand(1, 10);//left
+          //left side
+          arr[i][j+center]=Math.floor((arr[i][j]+arr[center][j+center]+arr[i][j+round])/3);//left
+          /*
+          console.log(i,j, 'arr '+arr[i][j]);
+          console.log('center '+ center,j+center,'arr '+ arr[center][j+center]);
+          console.log('round '+i,j+round,'arr '+  arr[i][j+round]);
+          console.log('-------------- '+j);
+          */
+          
+          //right side
+          arr[i+arrSize][j+center]=Math.floor((arr[i+arrSize][j]+arr[i+arrSize-center][j+center]+arr[i+arrSize][j+round])/3);//right
+          
+          /*
+          console.log('top '+ i+arrSize,j, 'arr '+arr[i+arrSize][j]);
+          console.log('center '+ i+arrSize-center,j+center,'arr '+ arr[i+arrSize-center][j+center]);
+          console.log('bottom '+ i+arrSize,j+round,'arr '+ arr[i+arrSize][j+round]);
+          console.log('-------------- '+j);
+          */
+
+
         }
-        else
+
+        if(j==0)
         {
-          arr[i+center][j]=Math.floor((arr[round][j-center]+arr[center][center]+arr[round][round])/3)+minmaxRand(1, 10);//right
-          arr[i][j+center]=Math.floor((arr[i-center][round]+arr[center][center]+arr[round][round])/3)+minmaxRand(1, 10);//bottom
-          console.log('verhright '+arr[round][j-center]);
-          console.log('nizright '+arr[round][round])
+          //top
+          arr[i+center][j]=Math.floor((arr[i][j]+arr[i+center][center]+arr[i+round][j])/3);//top
+          
+          /*
+          console.log('top '+ i,j, 'arr '+arr[i][j]);
+          console.log('center '+ i+center,center,'arr '+ arr[i+center][center]);
+          console.log('round '+i+round,j,'arr '+  arr[i+round][j]);
+          console.log('-------------- '+j);
+          */
+          
+          //bottom
+          arr[i+center][j+arrSize]=Math.floor((arr[i][j+arrSize]+arr[i+center][j+arrSize-center]+arr[i+round][j+arrSize])/3);//bottom
+          
+          
+          console.log('left '+ i,j+arrSize, 'arr '+arr[i][j+arrSize]);
+          console.log('center '+ i+center,j+arrSize-center,'arr '+ arr[i+center][j+arrSize-center]);
+          console.log('right '+ i+round,j+arrSize,'arr '+ arr[i+round][j+arrSize]);
+          console.log('-------------- '+j);
+          
+
+
         }
+
+        
+        /*
+        if(i==0)
+        {
+          //arr[i+center][j]=Math.floor((arr[i][j]+arr[center][center]+arr[round][j])/3);//verh
+          arr[i][j+center]=Math.floor((arr[i][j]+arr[center][center]+arr[i][round])/3);//left
+        }
+        if(j==0)
+        {
+          arr[i+center][j]=Math.floor((arr[i][j]+arr[center][center]+arr[round][j])/3);//verh
+          
+        }
+        if(i==arrSize-center-1)
+        {
+          //arr[i+center][j]=8;//right
+          arr[i+center][j]=Math.floor((arr[scope][0]+arr[center][center]+arr[round][round])/3);//right
+          console.log(scope,0, 'arr '+arr[scope][0]);
+          
+          console.log('center '+ center,center, arr[scope-round][center]);
+          console.log('round '+round,round, arr[round][round]);
+          console.log('--------------');
+          
+        }
+        /*
+        if(i>center || j>center)
+        {
+          arr[i+center][j]=Math.floor((arr[round][j-center]+arr[center][center]+arr[round][round])/3);//right
+          arr[i][j+center]=Math.floor((arr[i-center][round]+arr[center][center]+arr[round][round])/3);//bottom
+        }
+        */
+       
         
         //console.log('x '+i,'y '+j)
       }
@@ -335,15 +246,7 @@ let newTest =(n)=>{ //newTest()
 
 
 
-  /*
-  for(i=0;i<=arrSize;i+=round)
-  {
-    console.log(i);
-    //arr[i][i] verhleft & nijright
-    arr[round/2][i]=arr[round/2][round/2];
-  }
-*/
-//arr[0][8]=minmaxRand(0, 255);  
+  
 drawResult();
 }
 
