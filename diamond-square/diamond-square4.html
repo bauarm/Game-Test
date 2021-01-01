@@ -236,10 +236,102 @@ let drawResult =(arr)=>{
   }
 };  
 
+let drawLandscape =(arr)=>{//drawLandscape()
+  //console.log('draw')
+  for(i=0;i<arr.length;i++){
+    for(j=0;j<arr.length;j++){
+      let getColor=arr[i][j]
+      
+      if(getColor<=10 )
+      {
+        ctx.fillStyle='rgba(' + '100' + ',' + '160' + ',' + '140' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+      }
+      if(getColor<=40 && getColor>10)
+      {
+        ctx.fillStyle='rgba(' + '110' + ',' + '160' + ',' + '150' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+      }
+
+      if(getColor<=70 && getColor>40)
+      {
+        ctx.fillStyle='rgba(' + '160' + ',' + '210' + ',' + '190' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+      }
+        
+      if(getColor<100 && getColor>70)
+      {
+        ctx.fillStyle='rgba(' + '190' + ',' + '220' + ',' + '230' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=100 && getColor<130)
+      {
+        ctx.fillStyle='rgba(' + '140' + ',' + '180' + ',' + '90' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=100 && getColor<130)
+      {
+        ctx.fillStyle='rgba(' + '140' + ',' + '180' + ',' + '90' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=130 && getColor<160)
+      {
+        ctx.fillStyle='rgba(' + '200' + ',' + '220' + ',' + '130' + ',' + '255' + ')';
+       
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=160 && getColor<190)
+      {
+        ctx.fillStyle='rgba(' + '230' + ',' + '160' + ',' + '100' + ',' + '255' + ')';
+       
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=190 && getColor<220)
+      {
+        ctx.fillStyle='rgba(' + '240' + ',' + '120' + ',' + '60' + ',' + '255' + ')';
+       
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=220 && getColor<250)
+      {
+        ctx.fillStyle='rgba(' + '240' + ',' + '70' + ',' + '30' + ',' + '255' + ')';
+       
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=250 )
+      {
+        ctx.fillStyle='rgba(' + '210' + ',' + '60' + ',' + '30' + ',' + '255' + ')';
+       
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+
+    }
+  }
+};  
 
 
+let genWorld =(fn)=>
+  {
+  let arr=[33,17,9,5,3]
+  for(q=0; q<arr.length; q++)
+    {
+      makeDiamond(arr[q],arrCenter);
+    }
 
+  return fn();
+  }
 
+genWorld(function(){
+  drawLandscape(arrCenter);
+});
 
 
   </script>
