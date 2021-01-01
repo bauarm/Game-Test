@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="onwhell.css">
+	<title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    
+
+    
+
+    <script type="text/javascript">
+let grid =32;
+let arr=[];
+
+
+
+
+//----- Технические функции
+function oneRand(arr){
+	  var pos = arr.length-1;
+	  var num = minmaxRand(0, pos);
+	  return arr[num];
+	}
+function minmaxRand(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+//-----------------------------------------------    
+	let gId = (id) => {
+        return document.getElementById(id);
+    };
+//-----------------------------------------------    
+	
+  const canvas = gId('canvas');
+  
+  let wd = Math.floor(window.innerWidth/grid)*grid;//ширна видимой части экрана (сцены) кратная размеру клетки (1536/32=48 клеток)
+	let hg =Math.floor(window.innerHeight/grid)*grid;//высота видимой части экрана (сцены) кратная размеру клетки (768/32=24 клетки)
+	
+	let sizeSceneX=grid*40;//ширина сцены 
+  let sizeSceneY=grid*28///высота сцены
+
+  let sceneCellAmountX=sizeSceneX/grid;//количество клеток по ширине
+  let sceneCellAmountY=sizeSceneY/grid;//количество клеток по высоте
+  
+  canvas.width =sizeSceneX;
+  canvas.height =sizeSceneY;
+  
+ 
+	
+	const ctx = canvas.getContext('2d');
+   
+	
+    
+   
+    
+
+//Создание матрицы ландшафта
+(()=>{
+    for(i=0;i<17;i++)
+    {
+			arr[i]=[]
+			for(j=0;j<17;j++)
+			{
+				arr[i][j]=0;
+			}
+		}
+})();
+//console.log(arr); //вывод матрицы в консолль
+
+
+
+
+
+// Отрисовка поля по ранее созданной матрице	
+
+let drawField =()=>{
+	
+	for(i=0;i<arr.length;i++){
+		for(j=0;j<arr.length;j++){
+			ctx.strokeRect(i*grid, j*grid, grid, grid);
+		}
+	}
+};
+
+
+
+
+	
+//Функция отрисовки квадрата
+let rect =(x,y,w,h,color)=>{
+		ctx.fillStyle=color;
+		ctx.fillRect(x,y,w,h);
+	};
+//---------------------------
+
+
+drawField();	
+
+//console.log(arr);
+	
+	</script>
+</body>
+
+</html>
