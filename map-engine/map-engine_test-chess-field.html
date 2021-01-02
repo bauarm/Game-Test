@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="onwhell.css">
+	<title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript">
+//-----------------------------------------------    
+	let gId = (id) => {
+        return document.getElementById(id);
+    };
+//-----------------------------------------------    
+	arr=[];
+    const canvas = gId('canvas');
+    const ctx = canvas.getContext('2d');
+    let grid =32;
+	let width = grid*320, height = grid*320;
+	let gridX =Math.floor(width/grid),gridY=Math.floor(height/grid);     
+    canvas.width = window.innerWidth;
+	canvas.height =window.innerHeight;
+    canvas.style.backgroundColor = "#D0D0D0";
+    let cordX=canvas.width/2;
+    let cordY=canvas.height/2;
+    
+	
+//Создание матрицы шахматного поля
+(()=>{
+    for(i=0;i<gridX;i++){
+		arr[i]=[]
+		if(i%2==0){ 
+			for(j=0;j<gridY;j++){
+				if(j%2===0){
+				arr[i][j]=0;
+				}
+				else {
+				arr[i][j]=1;
+				}
+			}
+		}
+		else{
+			for(j=0;j<gridY;j++){
+				if(j%2===0){
+				arr[i][j]=1;
+				}
+				else {
+				arr[i][j]=0;
+				}
+			}
+		}
+	}
+})();
+//console.log(arr); //вывод матрицы в консолль
+//----------------------------------	
+
+// Отрисовка шахматного поля по ранее созданной матрице	
+let drawField =()=>{
+	for(i=0;i<gridX;i++){
+		for(j=0;j<gridY;j++){
+			let arch=arr[i][j];
+			if(arch==0){
+			ctx.fillStyle = "black";
+			ctx.fillRect(i*grid-cordX,j*grid-cordY,grid,grid);
+			}		
+		}
+	}
+console.log(gridX);
+};
+drawField();
+
+let drawField2 =(mx,my)=>{
+	for(i=0;i<gridX;i++){
+		for(j=0;j<gridY;j++){
+			let arch=arr[i][j];
+			if(arch==0){
+			ctx.fillStyle = "black";
+			ctx.fillRect(i*grid,j*grid,grid,grid);
+			}		
+		}
+	}
+};
+
+//-----------------------------------------
+
+//Функция отрисовки квадрата
+let rect =(x,y,w,h,color)=>{
+		ctx.fillStyle=color;
+		ctx.fillRect(x,y,w,h);
+	};
+//---------------------------
+
+let Ball =function(){
+        this.tileFrom =[1,1];
+		this.tileTo   =[1,1];
+		this.dimensions=[grid,grid];
+		this.position  =[Math.floor(gridX/2),Math.floor((gridY/2)*grid)];
+		
+		this.x=grid*2;
+        this.y=grid*2;
+        //console.log(Math.floor(gridX/2)*grid,Math.floor(gridY/2)*grid);
+        this.speed=2;
+        this.xSpeed=0;
+        this.ySpeed=0;
+        this.sizeW=grid;
+        this.sizeH=grid;
+    };
+
+Ball.prototype.draw=function(){
+       rect(this.x,this.y,grid,grid,"blue")
+    };
+    
+Ball.prototype.moveKey=function(){
+       
+				
+	   if(this.x!==cordX || this.y!==cordY){
+		    	
+			if(this.x>cordX){
+				
+				//this.x-=this.speed;
+					//console.log("")	
+			}
+		    if(this.y>cordY){
+				
+				//this.y-=this.speed;
+					//console.log("")	
+			}
+		    if(this.x<cordX){
+				
+				//this.x+=this.speed;
+					//console.log("")
+			}
+		    if(this.y<cordY){
+				
+				//this.y+=this.speed;
+					//console.log("")
+			}
+		}
+    };	
+Ball.prototype.setDirection=function(direction){
+        if(direction.up){
+            this.xSpeed=0; //обнуление предъидушего направления
+            this.ySpeed=-this.speed;
+			cordX=cordX,cordY=cordY-32;
+				//console.log(cordX,cordY)
+			
+		}
+        else if(direction.down){
+            this.xSpeed=0;
+            this.ySpeed=this.speed;
+			cordX=cordX,cordY=cordY+32;
+				//console.log(cordX,cordY)
+		}
+        else if(direction.left){
+            this.xSpeed=-this.speed;
+            this.ySpeed=0;
+			cordX=cordX-32,cordY=cordY;
+				//console.log(cordX,cordY)
+		}
+        else if(direction.right){
+            this.xSpeed=this.speed;
+            this.ySpeed=0;
+			cordX=cordX+32,cordY=cordY;
+				//console.log(cordX,cordY)
+		}
+        else if (direction.stop){
+            this.xSpeed=0;
+            this.ySpeed=0;
+        }
+        else {
+        	 this.xSpeed=0;
+             this.ySpeed=0;
+        }
+    };
+	
+	
+	
+let ball= new Ball();
+    
+let direction = {
+        left: false,
+        up: false,
+        right: false,
+        down: false,
+        stop: false
+    };
+
+window.addEventListener("keydown", function(e){
+    switch(e.keyCode)
+        {
+            case 37: 
+                direction.left = true;
+                this.xSpeed=-this.speed;
+				this.ySpeed=0;
+				cordX=cordX-32,cordY=cordY;
+					//console.log(cordX,cordY);
+                break;
+            case 38: 
+                direction.up = true;
+				this.xSpeed=0; //обнуление предъидушего направления
+                this.ySpeed=-this.speed;
+			    cordX=cordX,cordY=cordY-32;
+					//console.log(cordX,cordY);
+                break;
+            case 39: 
+                direction.right = true;
+                this.xSpeed=this.speed;
+                this.ySpeed=0;
+			    cordX=cordX+32,cordY=cordY;
+					//console.log(cordX,cordY);
+				break;
+            case 40: 
+                direction.down = true;
+                this.xSpeed=0;
+				this.ySpeed=this.speed;
+				cordX=cordX,cordY=cordY+32;
+					//console.log(cordX,cordY);
+                break;
+            case 32: 
+                direction.stop = true;
+                break;
+        }
+    }, false);
+
+window.addEventListener("keyup", function(e){
+        switch(e.keyCode)
+        {
+            case 37: 
+                direction.left = false;
+                break;
+            case 38: 
+                direction.up = false;
+                break;
+            case 39: 
+                direction.right = false;
+                break;
+            case 40: 
+                direction.down = false;
+                break;
+           case 32: 
+                direction.stop = false;
+                break;
+        }
+    }, false);
+	
+	
+let moveMap =()=>{
+	if(direction.up){
+            
+			
+	}
+    else if(direction.down){
+           
+		}
+        else if(direction.left){
+            
+		}
+        else if(direction.right){
+            
+		}
+};
+	
+//---------------функция управления мастабом карты	
+function onWheel(event){
+	var step=grid;
+	var mashtabPoint = (event.deltaY);
+	if(mashtabPoint>0 && grid<128 && grid>16){
+		step=step+4;
+		grid=step;
+	}
+	else if(mashtabPoint<0 && grid<128 && grid>16){
+		step=step-4;
+		grid=step;
+	}
+	else if(mashtabPoint>0 && grid==128){
+		return;
+	}
+	else if(mashtabPoint<0 && grid==16){
+		return;
+	}
+	else if(mashtabPoint<0 && grid==128){
+		step=step-4;
+		grid=step;
+	}
+	else if(mashtabPoint>0 && grid==16){
+		step=step+4;
+		grid=step;
+	}
+	else{
+	return;
+	}
+	//grid=grid+mashtabPoint;
+	console.log(grid);
+}
+
+
+canvas.addEventListener("wheel", onWheel);
+//----------------------------------------------
+
+//---------------слежение за указатем мыши
+
+
+let mouseX,mouseY;
+const wdh = canvas.width;
+const hgt = canvas.height;
+canvas.onmousemove = function(e) {
+		var dotx = Math.round(e.clientX - canvas.offsetLeft);
+		var doty = Math.round(e.clientY - canvas.offsetTop);
+		mouseX=dotx, mouseY=doty;
+		//console.log(dotx, doty, wdh, hgt);
+	}
+// функция сдвига карты и ограничения краев
+function mapShifter(){
+	let speedShift=8;
+	
+	if(mouseX>wdh-grid*2 && cordX<wdh){
+		cordX=cordX+speedShift;
+	
+	}
+	else if(mouseX<grid*2 && cordX>0){
+		cordX=cordX-speedShift;
+	}
+	else if(mouseY>hgt-grid*2 && cordY<hgt){
+		cordY=cordY+speedShift;
+	}
+	else if(mouseY<grid*2 && cordY>0){
+		cordY=cordY-speedShift;
+	}
+	console.log(cordX,cordY );
+	};
+
+	//-----------------------------------------//
+	
+//-------------------Движок анимации---------------------//
+
+
+//-----------------------------------------------------------//
+/*setInterval(()=>{
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawField();
+	ball.draw();
+	mapShifter()
+	ball.moveKey();
+   },30);*/
+	
+	var nextGameStep=(function(){
+	return requestAnimationFrame||
+	webkitRequestAnimationFrame||
+	mozRequestAnimationFrame||
+	oRequestAnimationFrame||
+	msRequestAnimationFrame||
+		function(callback){
+      		
+			setTimeout(callback, 1000/60);
+	    };
+})();
+
+function game(){
+    nextGameStep(game);
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawField();
+	ball.draw();
+	mapShifter()
+	ball.moveKey();
+	};
+game();	
+	
+	
+	
+	</script>
+</body>
+
+</html>

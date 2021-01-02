@@ -1,0 +1,29 @@
+@import url(reset.css);
+
+body{
+
+background-color: #000000;
+
+}
+#canvas{
+   
+        margin: 0 auto;
+        
+        position: absolute;
+       
+      
+}
+
+.techinfo {
+	float: right;
+	width: 180px;
+}
+.comment {
+	font-size: 10px;
+	color:yellow;
+}
+
+.maininfo {
+	font-size: 12px;
+	color: white;
+}

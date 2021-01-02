@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="onwhell.css">
+	<title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    
+
+    <div class="techinfo">
+    	<span class='comment'>FPS:</span>
+    	<span class='maininfo' id='fps-info'></span>
+    	<br>
+
+    	<span class='comment'>Клеток от края:</span>
+    	<span class='maininfo' id='gap-x'></span>
+    	<br>
+    	<span class='comment'>Клеток от верха:</span>
+    	<span class='maininfo' id='gap-y'></span>
+    	<br>
+
+    	<span class='comment'>Клеток по ширине:</span>
+    	<span class='maininfo' id='scene-cell-x'></span>
+    	<br>
+    	<span class='comment'>Клеток по высоте:</span>
+    	<span class='maininfo' id='scene-cell-y'></span>
+    	<br>
+    
+    	<span class='comment'>Ширина канваса:</span>
+    	<span class='maininfo' id='canva-size-x'></span>
+    	<br>
+    	<span class='comment'>Высота канваса:</span>
+    	<span class='maininfo' id='canva-size-y'></span>
+    	<br>
+
+    	<span class='comment'>Х персонажа:</span>
+    	<span class='maininfo' id='pers-x'></span>
+    	<br>
+    	<span class='comment'>У персонажа:</span>
+    	<span class='maininfo' id='pers-y'></span>
+    	<br>
+
+    </div>
+
+
+    <script type="text/javascript">
+let grid =32;
+let arr=[];
+let step;
+
+
+
+//----- Технические функции
+function oneRand(arr){
+	  var pos = arr.length-1;
+	  var num = minmaxRand(0, pos);
+	  return arr[num];
+	}
+function minmaxRand(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+//-----------------------------------------------    
+	let gId = (id) => {
+        return document.getElementById(id);
+    };
+//-----------------------------------------------    
+	
+  const canvas = gId('canvas');
+  
+  let wd = Math.floor(window.innerWidth/grid)*grid;//ширна видимой части экрана (сцены) кратная размеру клетки (1536/32=48 клеток)
+	let hg =Math.floor(window.innerHeight/grid)*grid;//высота видимой части экрана (сцены) кратная размеру клетки (768/32=24 клетки)
+	
+	let sizeSceneX=grid*40;//ширина сцены 
+  let sizeSceneY=grid*28///высота сцены
+
+  let sceneCellAmountX=sizeSceneX/grid;//количество клеток по ширине
+  let sceneCellAmountY=sizeSceneY/grid;//количество клеток по высоте
+  
+  document.getElementById('scene-cell-x').innerHTML = sceneCellAmountX;
+  document.getElementById('scene-cell-y').innerHTML = sceneCellAmountY;
+  
+  //задание размера холста
+	canvas.width =sizeSceneX;
+	canvas.height =sizeSceneY;
+	
+	const ctx = canvas.getContext('2d');
+   
+	let width = grid*320; height = grid*320; //размер всего канваса по (втч невидимая часть) 32*320=10240
+	
+	let gapCanvasX=(width-sizeSceneX)/2; //расстояние между сценой и краем в пикселях
+	let gapCellX=gapCanvasX/32; //расстояние между сценой и краем в клетках
+	
+	let gapCanvasY=(height-sizeSceneY)/2; //расстояние между сценой и краем в пикселях
+	let gapCellY=gapCanvasY/32; //расстояние между сценой и краем в клетках
+	
+	document.getElementById('gap-x').innerHTML = gapCellX;
+  document.getElementById('gap-y').innerHTML = gapCellY;
+
+	let gridX =Math.floor(width/grid),gridY=Math.floor(height/grid);
+	
+	document.getElementById('canva-size-x').innerHTML = gridX;
+  document.getElementById('canva-size-y').innerHTML = gridY;     
+    
+  canvas.style.backgroundColor = "#c8c864";
+  let cordX=(sizeSceneX/2);//центрированные на серидину обьекта сейчас перса) координаты
+  let cordY=(sizeSceneY/2);//центрированные на серидину обьекта сейчас перса) координаты
+  document.getElementById('pers-x').innerHTML = cordX + ' ' + cordX/grid;
+  document.getElementById('pers-y').innerHTML = cordY;  
+    
+    //console.log(gridX,gridY);
+    //console.log(cordX,cordY);
+    
+
+//Создание матрицы ландшафта
+(()=>{
+    for(i=0;i<gridX;i++)
+    {
+			arr[i]=[]
+			for(j=0;j<gridY;j++)
+			{
+				arr[i][j]=minmaxRand(0, 3);
+			}
+		}
+})();
+//console.log(arr); //вывод матрицы в консолль
+
+
+
+
+
+// Отрисовка поля по ранее созданной матрице	
+
+let drawField =()=>{
+	//console.log('arch');
+	for(i=0;i<sceneCellAmountX;i++){
+		for(j=0;j<sceneCellAmountY;j++){
+			let arch=arr[gapCellX+i][gapCellY+j];
+			//console.log('X '+gapCellX+i,)
+			if(arch==0)
+			{
+			//ctx.drawImage(item, mossArr[2].wiev[0], mossArr[2].wiev[1], grid, grid ,i*grid-cordX, j*grid-cordY, grid, grid);
+				ctx.fillStyle = "black";
+				ctx.fillRect(i*grid,j*grid,grid,grid);
+			}
+			
+			
+			else{
+				ctx.fillStyle = "yellow";
+				ctx.fillRect(i*grid,j*grid,grid,grid);
+			}
+		}
+	}
+};
+//console.log(gridX);
+drawField();
+
+function getInform()
+{
+	document.getElementById('scene-cell-x').innerHTML = sceneCellAmountX;
+  document.getElementById('scene-cell-y').innerHTML = sceneCellAmountY;
+  document.getElementById('canva-size-x').innerHTML = gridX;
+  document.getElementById('canva-size-y').innerHTML = gridY;
+  document.getElementById('pers-x').innerHTML = cordX+ ' | ' + cordX/grid;
+  document.getElementById('pers-y').innerHTML = cordY+ ' | ' + cordY/grid;
+
+  document.getElementById('gap-x').innerHTML = gapCellX;
+  document.getElementById('gap-y').innerHTML = gapCellY; 
+
+};
+
+	
+//Функция отрисовки квадрата
+let rect =(x,y,w,h,color)=>{
+		ctx.fillStyle=color;
+		ctx.fillRect(x,y,w,h);
+	};
+//---------------------------
+
+let Ball =function(){
+    this.tileFrom =[1,1];
+		this.tileTo   =[1,1];
+		this.dimensions=[grid,grid];
+		//this.position  =[gridX,gridY];
+		this.position  =[gridX*grid/2,gridY*grid/2];
+		
+		//this.x=grid;
+		//this.y=grid;
+		//this.x=grid*2;
+        //this.y=grid*2;
+        //console.log(Math.floor(gridX/2)*grid,Math.floor(gridY/2)*grid);
+        this.speed=2;
+        this.xSpeed=0;
+        this.ySpeed=0;
+        this.sizeW=grid;
+        this.sizeH=grid;
+    };
+
+Ball.prototype.draw=function(){
+       rect(this.position[0],this.position[1],grid,grid,"blue");
+       //cordX=this.position[0],cordY=this.position[1];
+       //rect((canvas.width/2),(canvas.height/2),grid,grid,"blue");
+       //arr[Math.floor((canvas.width/2-grid/2)/grid)][Math.floor((canvas.height/2-grid/2)/grid)]='&';
+       //console.log(    Math.floor((canvas.width/2-grid/2)/grid),Math.floor((canvas.height/2-grid/2)/grid)   )//cordX,cordY
+    };
+    
+
+
+	
+	
+let ball= new Ball();
+    
+let direction = {
+        left: false,
+        up: false,
+        right: false,
+        down: false,
+        stop: false
+    };
+
+window.addEventListener("keydown", function(e){
+    switch(e.keyCode)
+        {
+        case 37: 
+        	direction.left = true;
+         	this.xSpeed=-this.speed;
+					this.ySpeed=0;
+					//cordX=cordX-grid,cordY=cordY;
+					gapCellX=gapCellX-1,gapCellY=gapCellY;
+					//console.log(cordX,cordY);
+          break;
+        case 38: 
+          direction.up = true;
+					this.xSpeed=0; //обнуление предъидушего направления
+          this.ySpeed=-this.speed;
+			    //cordX=cordX,cordY=cordY-32;
+					gapCellX=gapCellX,gapCellY=gapCellY-1;
+					//console.log(cordX,cordY);
+          break;
+        case 39: 
+          direction.right = true;
+          this.xSpeed=this.speed;
+          this.ySpeed=0;
+			    //cordX=cordX+32,cordY=cordY;
+					gapCellX=gapCellX+1,gapCellY=gapCellY;
+					//console.log(cordX,cordY);
+					break;
+        case 40: 
+          direction.down = true;
+          this.xSpeed=0;
+					this.ySpeed=this.speed;
+					//cordX=cordX,cordY=cordY+32;
+					gapCellX=gapCellX,gapCellY=gapCellY+1;
+					//console.log(cordX,cordY);
+          break;
+        case 32: 
+          direction.stop = true;
+          break;
+        }
+    }, false);
+
+window.addEventListener("keyup", function(e){
+        switch(e.keyCode)
+        {
+            case 37: 
+                direction.left = false;
+                break;
+            case 38: 
+                direction.up = false;
+                break;
+            case 39: 
+                direction.right = false;
+                break;
+            case 40: 
+                direction.down = false;
+                break;
+           case 32: 
+                direction.stop = false;
+                break;
+        }
+    }, false);
+
+
+
+
+
+	var nextGameStep=(function(){
+	return requestAnimationFrame||
+	webkitRequestAnimationFrame||
+	mozRequestAnimationFrame||
+	oRequestAnimationFrame||
+	msRequestAnimationFrame||
+	function(callback)
+	{
+      		
+		setTimeout(callback, 1000/60);
+		console.log('sds');
+	};
+})();
+
+window.countFPS = (function () {
+  var lastLoop = (new Date()).getMilliseconds();
+  var count = 1;
+  var fps = 0;
+
+  return function () {
+    var currentLoop = (new Date()).getMilliseconds();
+    if (lastLoop > currentLoop) {
+      fps = count;
+      count = 1;
+    } else {
+      count += 1;
+    }
+    lastLoop = currentLoop;
+    document.getElementById('fps-info').innerHTML = fps;
+    return fps;
+  };
+}());
+
+function game(){
+  nextGameStep(game);
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+  getInform();
+  ball.draw();
+	//mapShifter();
+	
+  drawField();
+	
+	
+	countFPS();
+	};
+game();	
+	
+	
+	
+	</script>
+</body>
+
+</html>
