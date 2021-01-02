@@ -264,10 +264,10 @@ let drawResult =()=>{
         
         ctx.fillStyle='rgba(' + getColor + ',' + getColor + ',' + getColor + ',' + '255' + ')';
         ctx.fillRect(i*grid,j*grid,grid,grid);
-        ctx.font = "16px Arial";
+        ctx.font = "16px Universalia";
         ctx.fillStyle = "red";
         //ctx.textAlign = "center";
-        ctx.fillText(getColor, i*grid+4, j*grid+20);
+        ctx.fillText('𐙪', i*grid+4, j*grid+20);
         //console.log(getColor);
       }
 
@@ -374,8 +374,8 @@ let genWorld =()=>
   let arr=[17,9,5,3]
   for(q=0; q<arr.length; q++)
   {
-    console.log(q);
-    console.log(arr.length);
+    //console.log(q);
+    //console.log(arr.length);
     newTest(arr[q]);
     //return drawLandscape()
    
