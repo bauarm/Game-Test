@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="onwhell.css">
+	<title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    
+
+    
+
+    <script type="text/javascript">
+let grid =16;
+let arrCenter=[];
+
+let canvasSize=129;
+
+let chukSize=33;
+
+
+
+
+//----- Технические функции
+
+function minmaxRand(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+//-----------------------------------------------    
+	let gId = (id) => {
+        return document.getElementById(id);
+    };
+//-----------------------------------------------    
+	
+  const canvas = gId('canvas');
+  
+  let wd = Math.floor(window.innerWidth/grid)*grid;//ширна видимой части экрана (сцены) кратная размеру клетки (1536/32=48 клеток)
+	let hg =Math.floor(window.innerHeight/grid)*grid;//высота видимой части экрана (сцены) кратная размеру клетки (768/32=24 клетки)
+	
+	let sizeSceneX=grid*canvasSize;//ширина сцены 
+  let sizeSceneY=grid*canvasSize///высота сцены
+
+  let sceneCellAmountX=sizeSceneX/grid;//количество клеток по ширине
+  let sceneCellAmountY=sizeSceneY/grid;//количество клеток по высоте
+  
+  canvas.width =sizeSceneX;
+  canvas.height =sizeSceneY;
+  
+ 
+	
+	const ctx = canvas.getContext('2d');
+   
+world=[]
+
+function generateArrayList()
+  {
+  let statusWorld=0;
+  let chanks=Math.floor(canvasSize/chukSize)+1;
+  //console.log(chanks)
+  for(let i=0;i<chanks*chanks;i++)
+    {
+    
+        world[i]=[];
+        statusWorld++;
+        
+    }
+  
+  if(statusWorld==chanks*chanks){
+    
+    for(let i=0;i<world.length;i++)
+    {
+      arrGenerate(world[i])
+     
+      
+    }
+  }
+  
+
+ 
+  return world
+  };
+
+
+
+
+
+
+
+let arrGenerate=(arr)=>{
+   for(i=0;i<33;i++)
+    {
+      arr[i]=[]
+      for(j=0;j<33;j++)
+      {
+        arr[i][j]=0;
+      }
+    }
+  
+  
+};	
+
+
+// Отрисовка поля по ранее созданной матрице	
+
+function drawField(arr)
+  {
+  
+  for(i=0;i<arr.length;i++)
+    {
+    for(j=0;j<arr.length;j++)
+      {
+        ctx.strokeRect(i*grid, j*grid, grid, grid);
+      }
+    }
+  }
+
+
+
+
+
+arrGenerate(arrCenter,function(){
+  drawField(arrCenter)
+});
+
+
+let getSide=(arr)=>{//getSide(arrCenter)
+   
+   for(let i=0;i<arr.length;i++)
+    {
+      for(let j=0;j<arr.length;j++)
+      {
+        if(i==0){
+          console.log(arr[i+arr.length-1][j])
+        }
+      }
+    }
+  
+  
+};  
+
+let makeDiamond =(n,arr)=>{ //makeDiamond(33,arrCenter)
+  
+  let arrSize=arr.length-1;
+  let round=n-1;
+  let center=round/2;
+
+  
+  
+  for(i=0;i<=arrSize;i+=round)
+  {
+    for(j=0;j<=arrSize;j+=round)
+    {
+      if(arr[i][j]==0)
+      {
+        arr[i][j]=minmaxRand(1, 255);
+        
+       
+
+      }
+    }
+  }
+
+//-----------Обработка центральных точек
+  
+  for(i=center;i<=arrSize-1;i+=round)
+  {
+    for(j=center;j<=arrSize-1;j+=round)
+    {
+      if(arr[i][j]==0)
+      {
+        arr[i][j]=Math.floor((arr[i+center][j+center]+arr[i-center][j-center]+arr[i+center][j-center]+arr[i-center][j+center])/4)
+        
+      };
+    };
+  };
+  
+////-----------Конец обработки центральных точек
+
+
+//--------------Обработка краев массива
+ 
+
+  for(i=0;i<arrSize-center;i+=center)
+  {
+    for(j=0;j<arrSize-center;j+=center)
+    {
+      
+      if(arr[i+center][j]==0 && arr[i][j+center]==0)
+      {
+        
+        if(i==0)
+        {
+          //left side
+          arr[i][j+center]=Math.floor((arr[i][j]+arr[center][j+center]+arr[i][j+round])/3);//left
+          
+          //right side
+          arr[i+arrSize][j+center]=Math.floor((arr[i+arrSize][j]+arr[i+arrSize-center][j+center]+arr[i+arrSize][j+round])/3);//right
+          
+        };
+
+        if(j==0)
+        {
+          //top
+          arr[i+center][j]=Math.floor((arr[i][j]+arr[i+center][center]+arr[i+round][j])/3);//top
+          
+          //bottom
+          arr[i+center][j+arrSize]=Math.floor((arr[i][j+arrSize]+arr[i+center][j+arrSize-center]+arr[i+round][j+arrSize])/3);//bottom
+        };
+
+      };
+    };
+  };
+  
+////--------------Конец обрабоки краев массива
+
+
+//-----------Обработка серединных точек
+  
+  for(i=center;i<=arrSize-1;i+=center)
+  {
+    for(j=center;j<=arrSize-1;j+=center)
+    {
+      
+        if(arr[i][j]==0){
+          arr[i][j]=Math.floor((arr[i][j-center]+arr[i+center][j]+arr[i][j+center]+arr[i-center][j])/4);;
+          
+        }
+        
+        
+      
+    };
+  };
+  
+////-----------Конец обработки серединных точек
+
+
+  
+//drawResult(arr);
+};
+	
+	
+function testDrawCenter()
+	{
+	for(let i=1;i<3;i++)
+  	{
+    	for( let j=1;j<3;j++)
+			{	
+				drawResult(i,j,arrCenter);
+				console.log(i,j)
+    	}
+  	}
+	
+
+	}
+
+
+
+
+
+let drawResult =(pX,pY,arr)=>{
+  let arrPosX=pX;//(arrPosX*(grid*chukSize-grid))
+  let arrPosY=pY;
+  console.log(arrPosX,arrPosY)
+  for(i=0;i<arr.length;i++)
+  {
+    for(j=0;j<arr.length;j++){
+      let getColor=arr[i][j]
+      if(getColor>0)
+      {
+        
+        ctx.fillStyle='rgba(' + getColor + ',' + getColor + ',' + getColor + ',' + '255' + ')';
+        ctx.fillRect(i*grid+(arrPosX*(grid*chukSize-grid)),j*grid+(arrPosY*(grid*chukSize-grid)),grid,grid);
+        ctx.font = "7px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText(getColor, (i*grid+2)*(grid*chukSize-grid), (j*grid+10)*(grid*chukSize-grid));
+        
+      }
+
+      if(getColor<0)
+      {
+        
+        ctx.fillStyle='rgba(' + '250' + ',' + '10' + ',' + '10' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "white";
+        //ctx.textAlign = "center";
+        ctx.fillText(getColor, i*grid+4, j*grid+20);
+        //console.log(getColor);
+      }
+    }
+  }
+};  
+
+let drawLandscape =(arr)=>{//drawLandscape()
+  //console.log('draw')
+  for(i=0;i<arr.length;i++){
+    for(j=0;j<arr.length;j++){
+      let getColor=arr[i][j]
+      
+      if(getColor<=10 )
+      {
+        ctx.fillStyle='rgba(' + '100' + ',' + '160' + ',' + '140' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+      }
+      if(getColor<=40 && getColor>10)
+      {
+        ctx.fillStyle='rgba(' + '110' + ',' + '160' + ',' + '150' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+      }
+
+      if(getColor<=70 && getColor>40)
+      {
+        ctx.fillStyle='rgba(' + '160' + ',' + '210' + ',' + '190' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+      }
+        
+      if(getColor<100 && getColor>70)
+      {
+        ctx.fillStyle='rgba(' + '190' + ',' + '220' + ',' + '230' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=100 && getColor<130)
+      {
+        ctx.fillStyle='rgba(' + '140' + ',' + '180' + ',' + '90' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=100 && getColor<130)
+      {
+        ctx.fillStyle='rgba(' + '140' + ',' + '180' + ',' + '90' + ',' + '255' + ')';
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=130 && getColor<160)
+      {
+        ctx.fillStyle='rgba(' + '200' + ',' + '220' + ',' + '130' + ',' + '255' + ')';
+       
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=160 && getColor<190)
+      {
+        ctx.fillStyle='rgba(' + '230' + ',' + '160' + ',' + '100' + ',' + '255' + ')';
+       
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=190 && getColor<220)
+      {
+        ctx.fillStyle='rgba(' + '240' + ',' + '120' + ',' + '60' + ',' + '255' + ')';
+       
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=220 && getColor<250)
+      {
+        ctx.fillStyle='rgba(' + '240' + ',' + '70' + ',' + '30' + ',' + '255' + ')';
+       
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+      if(getColor>=250 )
+      {
+        ctx.fillStyle='rgba(' + '210' + ',' + '60' + ',' + '30' + ',' + '255' + ')';
+       
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        
+      }
+
+    }
+  }
+};  
+
+
+let genWorld =(fn)=>
+  {
+  let arr=[33,17,9,5,3]
+  for(q=0; q<arr.length; q++)
+    {
+      makeDiamond(arr[q],arrCenter);
+    }
+
+  return fn();
+  }
+
+genWorld(function(){
+  drawLandscape(arrCenter);
+});
+
+
+  </script>
+</body>
+
+</html>
