@@ -19,6 +19,8 @@ let arrCenter=[];
 
 let canvasSize=129;
 
+let chukSize=33;
+
 
 
 
@@ -201,23 +203,44 @@ let makeDiamond =(n,arr)=>{ //makeDiamond(33,arrCenter)
 
 
   
-drawResult(arr);
+//drawResult(arr);
 };
 	
 	
-let drawResult =(arr)=>{
-  
-  for(i=0;i<arr.length;i++){
+function testDrawCenter()
+	{
+	for(let i=1;i<3;i++)
+  	{
+    	for( let j=1;j<3;j++)
+			{	
+				drawResult(i,j,arrCenter);
+				console.log(i,j)
+    	}
+  	}
+	
+
+	}
+
+
+
+
+
+let drawResult =(pX,pY,arr)=>{
+  let arrPosX=pX;//(arrPosX*(grid*chukSize-grid))
+  let arrPosY=pY;
+  console.log(arrPosX,arrPosY)
+  for(i=0;i<arr.length;i++)
+  {
     for(j=0;j<arr.length;j++){
       let getColor=arr[i][j]
       if(getColor>0)
       {
         
         ctx.fillStyle='rgba(' + getColor + ',' + getColor + ',' + getColor + ',' + '255' + ')';
-        ctx.fillRect(i*grid,j*grid,grid,grid);
+        ctx.fillRect(i*grid+(arrPosX*(grid*chukSize-grid)),j*grid+(arrPosY*(grid*chukSize-grid)),grid,grid);
         ctx.font = "7px Arial";
         ctx.fillStyle = "red";
-        ctx.fillText(getColor, i*grid+2, j*grid+10);
+        ctx.fillText(getColor, (i*grid+2)*(grid*chukSize-grid), (j*grid+10)*(grid*chukSize-grid));
         
       }
 
