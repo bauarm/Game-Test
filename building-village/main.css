@@ -1,0 +1,13 @@
+@import url(reset.css);
+@import url(gui.css);
+body{
+background-color: #000000;
+}
+#scene{
+   
+        /*width: 100%;
+        height: 100%;*/
+        position: absolute;
+       
+      
+}

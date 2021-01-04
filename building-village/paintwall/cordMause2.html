@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript">
+    let gId = (id) => {
+        return document.getElementById(id);
+    };
+    arr=[];
+    
+    var step = 32;
+
+	var item = new Image();   
+	item.addEventListener("load", function() {
+  
+	}, false);
+	item.src = 'build2.png'; 
+
+    const canvas = gId('canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth,
+	    height = window.innerHeight;
+    let grid =32, gridX =Math.floor(width/grid),gridY=Math.floor(height/grid);     
+    canvas.width = gridX*grid;
+    canvas.height = gridY*grid;
+    canvas.style.backgroundColor = "#DEB887";
+    let cordX=2*grid;
+    let cordY=2*grid;
+
+(()=>{
+    for(i=0;i<gridX;i++){
+		arr[i]=[]
+		for(j=0;j<gridY;j++){
+			arr[i][j]=0;
+		}
+	}
+})();
+	
+
+	
+let mzcolor =()=>{
+	for(i=0;i<gridX;i++){
+		for(j=0;j<gridY;j++){
+			let arch=arr[i][j];
+			if(arch==0){
+			ctx.strokeStyle = "white";
+			ctx.strokeRect(i*grid,j*grid,grid,grid);
+			}		
+			else if(arch==1){
+			ctx.fillStyle = "red";
+			ctx.fillRect(i*grid+2,j*grid+2,grid-4,grid-4);
+			}	
+			else if(arch==2){
+			ctx.fillStyle = "black";
+			ctx.fillRect(i*grid,j*grid,grid,grid);
+			}	
+		}
+	}
+};
+	
+let rect=(x,y,w,h,color)=>{
+	ctx.fillStyle=color;
+	ctx.fillRect(x,y,w,h);
+};
+
+
+canvas.onclick=(e)=>{
+  	draw(e,'w');
+ 	return false;
+};	
+  
+
+canvas.oncontextmenu =(e)=>{
+	draw(e,'0');
+ 	return false;
+};	
+	
+function draw(e,a) {
+  
+  var dotx = Math.round(e.clientX - canvas.offsetLeft);
+  var doty = Math.round(e.clientY - canvas.offsetTop);
+ 
+  var xcell = Math.floor(dotx / (grid));
+  var ycell = Math.floor(doty / (grid));
+  //ctx.fillRect((xcell) * grid, (ycell) * grid, grid, grid);
+  arr[xcell][ycell]=a;
+  //console.log(xcell,ycell);
+  spasetest(arr);
+
+
+  
+}
+	
+
+
+
+
+
+
+var drawRect= function(i,x,y,w,h,a){//drawRect(64,64,32,32,45)
+	   	//i-номер картинки в массиве, a-угол поворота берется из массива с описанием картинок wallArr[n].corner
+	   	let dx=x+w/2, dy=y+h/2;
+	   	if(a){
+	   		a=a*(Math.PI/180)
+	   		ctx.save();
+	   		ctx.translate(dx,dy); //сдвигает точку вращения
+	        ctx.rotate(a); 
+	        ctx.translate(-dx,-dy);// возвращает точку центра на прежнее место
+	   }	
+
+	   		ctx.drawImage(item, wallArr[i].wiev[0], wallArr[i].wiev[1], w, h ,x, y, step, step);
+	   		//1-картинка, 2/3-ее положение на спрайте, 4/5-ширина и высота
+
+	   	if(a){
+	   			ctx.restore();
+	   	}
+  
+
+  };
+		
+		
+		
+var wallArr =[
+
+
+
+wallLineV ={//Vertical lv
+	name:"wallLineV",
+	select:false,
+	wiev:[64,64],
+	corner:0,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+	wallLineH ={//horizontal lh
+	name:"wallLineH",
+	select:false,
+	wiev:[64,64],
+	corner:90,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+	wallCornerTL ={//top-left ctl
+	name:"wallCornerTL",
+	select:false,
+	wiev:[192,64],
+	corner:0,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+	wallCornerTR ={//top-right tr
+	name:"wallCornerTR",
+	select:false,
+	wiev:[192,64],
+	corner:90,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+	wallCornerDL ={//down-left dl
+	name:"wallCornerDL",
+	select:false,
+	wiev:[192,64],
+	corner:270,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+	wallCornerDR ={//down-right
+	name:"wallCornerDR",
+	select:false,
+	wiev:[192,64],
+	corner:180,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+wallCross ={
+	name:"wallCross",
+	select:false,
+	wiev:[128,64],
+	corner:0,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+wallTT ={//top
+	name:"wallTT",
+	select:false,
+	wiev:[256,64],
+	corner:0,
+	trans: false,
+	gather:false,
+	lift:false
+    },	
+	wallTD ={//down
+	name:"wallTD",
+	select:false,
+	wiev:[256,64],
+	corner:180,
+	trans: false,
+	gather:false,
+	lift:false
+    },	
+	wallTR ={//right
+	name:"wallTD",
+	select:false,
+	wiev:[256,64],
+	corner:90,
+	trans: false,
+	gather:false,
+	lift:false
+    },	
+	wallTL ={//left
+	name:"wallTD",
+	select:false,
+	wiev:[256,64],
+	corner:270,
+	trans: false,
+	gather:false,
+	lift:false
+    },	
+floorBad ={//wooden floor bad
+	name:"wallLineV",
+	select:false,
+	wiev:[160,64],
+	corner:0,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+wallOne ={//one trunk
+	name:"wallOne",
+	select:false,
+	wiev:[160,64],
+	corner:0,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+northEnd ={//13
+	name:"northEnd",
+	select:false,
+	wiev:[96,64],
+	corner:0,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+ eastEnd ={//14
+	name:"eastEnd",
+	select:false,
+	wiev:[96,64],
+	corner:90,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+southEnd ={//15
+	name:"southEnd",
+	select:false,
+	wiev:[96,64],
+	corner:180,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+westEnd ={//16
+	name:"westEnd",
+	select:false,
+	wiev:[96,64],
+	corner:270,
+	trans: false,
+	gather:false,
+	lift:false
+    },
+];
+
+
+
+
+function spasetest(a)//spasetest(roomtest) рассматривает окружение каждой клеточки на местности
+	//a-образец помещения, b-массив со спрайтами
+	{
+	//console.log(a.length);
+	for(i=0;i<a.length;i++)
+
+		{
+		//console.log(a[i]);
+		//console.log(i);
+		for(j=0;j<a[i].length;j++)
+			{
+			try{
+				var center=a[i][j];
+				let east=a[i+1][j];
+				let west=a[i-1][j];
+				let south=a[i][j+1];
+				let north=a[i][j-1];
+				
+				if(center=='w' && south=='w' && north!=='w' && east!=='w' && west!=='w' ){//северный тупик
+					drawRect(13,i*step,j*step,step,step, wallArr[13].corner);
+					
+				}
+				if(center=='w' && south!=='w' && north!=='w' && east!=='w' && west=='w' ){//северный тупик
+					drawRect(14,i*step,j*step,step,step, wallArr[14].corner);
+					
+				}
+				if(center=='w' && south!=='w' && north=='w' && east!=='w' && west!=='w' ){//северный тупик
+					drawRect(15,i*step,j*step,step,step, wallArr[15].corner);
+					
+				}
+				if(center=='w' && south!=='w' && north!=='w' && east=='w' && west!=='w' ){//северный тупик
+					drawRect(16,i*step,j*step,step,step, wallArr[16].corner);
+					
+				}
+
+				if(center=='w' && east!=='w' && south!=='w' && west!=='w' && north!=='w'){//одиночный столб
+					drawRect(12,i*step,j*step,step,step, wallArr[12].corner);
+					
+				}
+				
+				if(center=='w' && east=='w' && south=='w'){//верхний левый угол
+					drawRect(2,i*step,j*step,step,step, wallArr[2].corner);
+					
+				}
+				if(center=='w' && west=='w' && south=='w'){//верхний правый угол
+					drawRect(3,i*step,j*step,step,step, wallArr[3].corner);
+					
+
+				}
+				if(center=='w' && east=='w' && north=='w'){//нижний правый угол
+					drawRect(4,i*step,j*step,step,step, wallArr[4].corner);
+					
+
+				}
+				if(center=='w' && west=='w' && north=='w'){//нижний правый угол
+					drawRect(5,i*step,j*step,step,step, wallArr[5].corner);
+					
+
+				}
+				if(center=='w' && north=='w' && south=='w'){//вертикальная стена 
+					drawRect(0,i*step,j*step,step,step, wallArr[0].corner);
+					
+
+				}
+				if(center=='w' && west=='w' && east=='w'){//горизонтальная стена
+					drawRect(1,i*step,j*step,step,step, wallArr[1].corner);
+					
+
+				}
+				
+				if(center=='w' && west=='w' && east=='w' && north=='w' && south=='w'){//крест
+					drawRect(6,i*step,j*step,step,step, wallArr[6].corner);
+					
+				}
+
+				if(center=='w' && west=='w' && east=='w' && north=='w' && south!=='w'){//верхняя примыкающая стена
+					drawRect(8,i*step,j*step,step,step, wallArr[8].corner);
+					
+				}
+				if(center=='w' && west=='w' && east=='w' && south=='w' && north!=='w'){//нижняя примыкающая стена
+					drawRect(7,i*step,j*step,step,step, wallArr[7].corner);
+					
+
+				}
+		 		if(center=='w' && north=='w' && south=='w' && west=='w' && east!=='w'){//левая примыкающая стена
+					drawRect(9,i*step,j*step,step,step, wallArr[9].corner);
+					
+
+				}
+		 		if(center=='w' && north=='w' && south=='w' && east=='w' && west!=='w'){//правая примыкающая стена
+					drawRect(10,i*step,j*step,step,step, wallArr[10].corner);
+					//console.log('0',north,'0')
+					//console.log(west,center,east)
+					//console.log('0',south,'0')
+
+				}
+		 		
+			}
+			catch(e){
+				//console.log(e);
+				continue
+			}
+			}
+		}
+	return 'end';
+	}
+
+    
+
+	
+	
+	
+	
+	
+	
+	setInterval(()=>{
+	ctx.clearRect(0,0,width,height);
+    mzcolor();
+	spasetest(arr);
+	},30);
+
+
+    </script>
+</body>
+
+</html>

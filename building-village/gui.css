@@ -1,0 +1,36 @@
+#planner-info{
+    position: absolute;
+    
+    width: 200px;
+    height: 80%;
+    
+    z-index: 40;
+    right:0;
+    
+}
+#plannerHideButtom{
+    background-color: RGBA(0, 0, 0, 0.6);
+    margin: 5px;
+    width: 30px;
+    height: 30px;
+    float: right;
+    border: 1px solid white; 
+    box-shadow: inset 0 0 5px rgba(255,255,255,0.9);
+}
+:hover#plannerHideButtom{
+    background-color: black;
+    cursor: pointer;
+}
+
+#canvas-info{
+    color: white;
+    background-color: RGBA(0, 0, 0, 0.4);
+    display: block;
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    overflow:auto;
+	border: 1px solid white; 
+    box-shadow: inset 0 0 5px rgba(255,255,255,0.9);
+}
+  
