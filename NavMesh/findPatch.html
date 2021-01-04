@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+<link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="reset.css">
+	
+</head>
+
+<body>
+	<canvas id="canvas"></canvas>
+    
+</body>
+
+<script type="text/javascript">
+    let gId = (id) => {
+        return document.getElementById(id);
+    };
+    arr=[];
+    const canvas = gId('canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth,
+	    height = window.innerHeight;
+    let grid =32, gridX =Math.floor(width/grid),gridY=Math.floor(height/grid);     
+    canvas.width = gridX*grid;
+    canvas.height = gridY*grid;
+    canvas.style.backgroundColor = "#D0D0D0";
+    let cordX=gridX/2;
+    let cordY=gridY/2;
+    console.log(gridX,gridY);
+
+//Создание матрицы шахматного поля
+(()=>{
+    for(i=0;i<gridX;i++){
+    arr[i]=[]
+    if(i%2==0){ 
+      for(j=0;j<gridY;j++){
+        if(j%2===0){
+        arr[i][j]=0;
+        }
+        else {
+        arr[i][j]=1;
+        }
+      }
+    }
+    else{
+      for(j=0;j<gridY;j++){
+        if(j%2===0){
+        arr[i][j]=1;
+        }
+        else {
+        arr[i][j]=0;
+        }
+      }
+    }
+  }
+})();
+console.log(arr); //вывод матрицы в консолль
+
+// Отрисовка шахматного поля по ранее созданной матрице 	
+let drawField =()=>{
+  for(i=0;i<gridX;i++){
+    for(j=0;j<gridY;j++){
+      let arch=arr[i][j];
+      if(arch==0){
+      ctx.fillStyle = "white";
+      ctx.fillRect(i*grid,j*grid,grid,grid);
+      }   
+    }
+  }
+
+console.log("grid-x "+gridX,"grid-y "+gridY);
+};
+
+drawField();
+	
+let rect=(x,y,w,h,color)=>{
+  ctx.fillStyle=color;
+  ctx.fillRect(x,y,w,h);
+};
+
+  
+let Unit =function()
+ {
+  this.tileFrom =[1,1];
+  this.tileTo   =[1,1];
+  this.dimensions=[grid,grid];
+  this.position  =[Math.floor(gridX/2),Math.floor((gridY/2)*grid)];
+  this.x=cordX*grid;
+  this.y=cordY*grid;
+  this.posX=2;
+  this.posY=2;
+    
+  this.speed=4;
+  this.xSpeed=0;
+  this.ySpeed=0;
+  this.sizeW=32;
+  this.sizeH=32;
+  };
+
+Unit.prototype.draw=function(){
+  rect(this.x,this.y,this.sizeW,this.sizeH,"blue")
+  player.move();
+  };
+
+Unit.prototype.move=function(){
+        
+    if(this.x!==cordX || this.y!==cordY){
+       if(this.x>cordX && arr[this.posX-1][this.posY]!==2){
+           /*this.xSpeed=this.speed
+         this.x-=this.xSpeed;*/
+           this.x-=grid
+       }
+        if(this.y>cordY && arr[this.posX][this.posY-1]!==2){
+        /*this.ySpeed=this.speed
+        this.y-=this.ySpeed;*/
+            this.y-=grid
+       }
+        if(this.x<cordX && arr[this.posX+1][this.posY]!==2){
+           /*this.xSpeed=this.speed
+         this.x+=this.xSpeed;*/
+            this.x+=grid
+       }
+       if(this.y<cordY && arr[this.posX][this.posY+1]!==2){
+        /*this.ySpeed=this.speed;
+        this.y+=this.ySpeed;*/
+            this.y+=grid
+       }
+      
+    }
+    
+  
+   
+   
+   
+   
+   
+   };
+//Движок анимации
+var nextGameStep=(function()
+  {
+  return  requestAnimationFrame||
+          webkitRequestAnimationFrame||
+          mozRequestAnimationFrame||
+          oRequestAnimationFrame||
+          msRequestAnimationFrame||
+          function(callback)
+            {
+            setTimeout(callback, 1000/60);
+            };
+  })();
+
+let player= new Unit();
+
+// Запуск игрового цикла событий
+function game(){
+    nextGameStep(game);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawField();
+    player.draw();
+    };
+
+game(); 
+	
+	
+	
+	
+	
+	
+	
+
+
+    </script>
+</body>
+
+</html>
