@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+<link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="reset.css">
+	
+</head>
+
+<body>
+    <section id="arrinfo">
+     <div id="cord">
+		X0:Y0
+    </div>
+    <div id="cell">
+		X0:Y0
+    </div>
+ <div id="cord2">
+		X0:Y0
+    </div>
+ <div id="cord3">
+		X0:Y0
+    </div>
+	</section>
+	<canvas id="canvas"></canvas>
+    <script type="text/javascript">
+    let gId = (id) => {
+        return document.getElementById(id);
+    };
+    arr=[];
+    const canvas = gId('canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth,
+	    height = window.innerHeight;
+    let grid =32, gridX =Math.floor(width/grid),gridY=Math.floor(height/grid);     
+    canvas.width = gridX*grid;
+    canvas.height = gridY*grid;
+    canvas.style.backgroundColor = "#D0D0D0";
+    let cordX=10*grid;
+    let cordY=5*grid;
+
+
+(()=>{
+    for(i=0;i<gridX;i++){
+		arr[i]=[]
+		for(j=0;j<gridY;j++){
+			arr[i][j]=0;
+		}
+	}
+})();	
+
+	
+let mzcolor =()=>{
+	for(let i=0;i<gridX;i++){
+		for(let j=0;j<gridY;j++){
+			let arch=arr[i][j];
+			if(arch==0){
+			ctx.strokeStyle = "white";
+			ctx.strokeRect(i*grid,j*grid,grid,grid);
+			}		
+			else if(arch==1){
+			ctx.fillStyle = "red";
+			ctx.fillRect(i*grid+2,j*grid+2,grid-4,grid-4);
+			}	
+			else if(arch==2){
+			ctx.fillStyle = "black";
+			ctx.fillRect(i*grid,j*grid,grid,grid);
+			}	
+		}
+	}
+};
+	
+
+	
+let rect=(x,y,w,h,color)=>{
+	ctx.fillStyle=color;
+	ctx.fillRect(x,y,w,h);
+};
+
+let text =(x,y,cell,col)=>{
+	ctx.font = "20px serif";
+    ctx.fillStyle=col;
+    ctx.textBaseline = "bottom";
+    ctx.textAlign = "left";
+    ctx.fillText(cell, x, y);
+};  
+	
+    let Unit =function(){
+        this.tileFrom =[1,1];
+		this.tileTo   =[1,1];
+		this.dimensions=[grid,grid];
+		this.position  =[Math.floor(gridX/2),Math.floor((gridY/2)*grid)];
+		this.x=2*grid;
+        this.y=2*grid;
+        this.posX=2;
+		this.posY=2;
+		
+		this.speed=32;
+        this.xSpeed=this.speed;
+        this.ySpeed=this.speed;
+        this.sizeW=32;
+        this.sizeH=32;
+    };
+
+    Unit.prototype.draw=function(){
+		rect(this.x,this.y,this.sizeW,this.sizeH,"blue")
+		player.move();
+	};
+    
+	
+	Unit.prototype.move=function(){
+        this.posX=Math.floor(this.x/grid);
+   		this.posY=Math.floor(this.y/grid); 
+   		//console.log(this.posX,this.posY)
+   		var dotStay=arr[this.posX][this.posY];
+   		//console.log(dotStay)
+   		var lt=arr[this.posX-1][this.posY-1];//top-left
+   		var tl=arr[this.posX][this.posY-1];//top
+  		var rt=arr[this.posX+1][this.posY-1];//top-right
+   		
+   		var rl=arr[this.posX+1][this.posY];//right
+   		var ll=arr[this.posX-1][this.posY];//left
+   		
+   		var ld=arr[this.posX-1][this.posY+1];//left-down
+  		var dl=arr[this.posX][this.posY+1];//down
+  		var rd=arr[this.posX+1][this.posY+1];//right-down
+  		console.log(this.posX,this.posY);
+  		console.log('------------------');
+  		console.log(lt,tl,rt);
+  		console.log(ll,8,rl);
+  		console.log(ld,dl,rd);
+  		console.log('==================');
+		
+		if(this.x!==cordX || this.y!==cordY){
+		   if(this.x>cordX && arr[this.posX-1][this.posY]!==2){
+		       this.xSpeed=this.speed
+			   this.x-=this.xSpeed;
+		       //this.x-=grid
+		   }
+		    if(this.y>cordY && arr[this.posX][this.posY-1]!==2){
+				this.ySpeed=this.speed
+				this.y-=this.ySpeed;
+		        //this.y-=grid
+		   }
+		    if(this.x<cordX && arr[this.posX+1][this.posY]!==2){
+		       this.xSpeed=this.speed
+			   this.x+=this.xSpeed;
+		        //this.x+=grid
+		   }
+		   if(this.y<cordY && arr[this.posX][this.posY+1]!==2){
+				this.ySpeed=this.speed;
+				this.y+=this.ySpeed;
+		        //this.y+=grid
+		   }
+			
+		}
+   
+   
+   };
+	
+	let player= new Unit();
+
+
+
+
+
+canvas.oncontextmenu = function (e){
+draw(e);
+ return false;
+};	
+	
+function draw(e) {
+  
+   var dotx = Math.round(e.clientX - canvas.offsetLeft);
+    var doty = Math.round(e.clientY - canvas.offsetTop);
+ 
+  var xcell = Math.floor(dotx / (grid));
+  var ycell = Math.floor(doty / (grid));
+  ctx.fillRect((xcell) * grid, (ycell) * grid, grid, grid);
+  arr[xcell][ycell]=2;
+  
+}
+	
+canvas.onclick=(e)=>{
+  let dotx = Math.round(e.clientX - canvas.offsetLeft);
+  let doty = Math.round(e.clientY - canvas.offsetTop);
+  let xcell = Math.floor(dotx / (grid));
+  let ycell = Math.floor(doty / (grid));
+  let chec = arr[xcell][ycell];
+  cordX=xcell*grid,cordY=ycell*grid; 
+  /*rect((xcell*grid)+2,(ycell*grid)+2,grid-4,grid-4,"red")
+  arr[xcell][ycell]=1;*/
+};
+
+    
+	
+	
+		
+	
+	
+setInterval(()=>{
+	ctx.clearRect(0,0,width,height);
+    mzcolor();
+	player.draw();
+	
+	},30);	
+	
+
+
+    </script>
+</body>
+
+</html>
