@@ -19,14 +19,25 @@ body{
   
 }
 #arrinfo{
-  background-color: RGBA(0, 0, 0, 0.4);
+  background-color: RGBA(0, 0, 0, 0.9);
   padding: 5px;
   color: white;
   position: absolute;
   z-index: 40;
   right:0;
-  width: 128px;
+  width: 192px;
   height: 100%;
   overflow:auto;
   
+}
+
+
+.comment {
+  font-size: 14px;
+  color:yellow;
+}
+
+.maininfo {
+  font-size: 16px;
+  color: white;
 }

@@ -11,18 +11,22 @@
 
 <body>
     <section id="arrinfo">
-     <div id="cord">
-		X0:Y0
-    </div>
-    <div id="cell">
-		X0:Y0
-    </div>
- <div id="cord2">
-		X0:Y0
-    </div>
- <div id="cord3">
-		X0:Y0
-    </div>
+     	
+     	<br>
+     	<span class='comment'>Х персонажа:</span>
+    	<span class='maininfo' id='pers-x'></span>
+    	<br>
+    	<span class='comment'>У персонажа:</span>
+    	<span class='maininfo' id='pers-y'></span>
+    	
+		<hr />
+		<br>
+    	<span class='comment'>Х Цели:</span>
+    	<span class='maininfo' id='targ-x'></span>
+    	<br>
+    	<span class='comment'>У Цели:</span>
+    	<span class='maininfo' id='targ-y'></span>
+    	<br>
 	</section>
 	<canvas id="canvas"></canvas>
     <script type="text/javascript">
@@ -114,6 +118,8 @@ let text =(x,y,cell,col)=>{
         let arrSide=[]
         this.posX=Math.floor(this.x/grid);
    		this.posY=Math.floor(this.y/grid); 
+   		document.getElementById('pers-x').innerHTML = this.posX+1;
+  		document.getElementById('pers-y').innerHTML = this.posY+1;
    		//console.log(this.posX,this.posY)
    		var dotStay=arr[this.posX][this.posY];
    		//console.log(dotStay)
@@ -157,8 +163,7 @@ let text =(x,y,cell,col)=>{
 		   }
 			
 		}
-		else
-   			for(let i=0;i<gridX;i++){
+		
    
    };
 	
@@ -194,6 +199,8 @@ canvas.onclick=(e)=>{
   cordX=xcell*grid,cordY=ycell*grid; 
   /*rect((xcell*grid)+2,(ycell*grid)+2,grid-4,grid-4,"red")
   arr[xcell][ycell]=1;*/
+  document.getElementById('targ-x').innerHTML = xcell+1;
+  document.getElementById('targ-y').innerHTML = ycell+1;
 };
 
     
