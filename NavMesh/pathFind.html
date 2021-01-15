@@ -111,6 +111,7 @@ let text =(x,y,cell,col)=>{
     
 	
 	Unit.prototype.move=function(){
+        let arrSide=[]
         this.posX=Math.floor(this.x/grid);
    		this.posY=Math.floor(this.y/grid); 
    		//console.log(this.posX,this.posY)
@@ -156,7 +157,8 @@ let text =(x,y,cell,col)=>{
 		   }
 			
 		}
-   
+		else
+   			for(let i=0;i<gridX;i++){
    
    };
 	
