@@ -11,7 +11,10 @@
 
 <body>
     <section id="arrinfo">
-     	
+     	<br>
+     	<div>
+     		<button id='startBtn'>Start</button>
+        </div>
      	<br>
      	<span class='comment'>Х персонажа:</span>
     	<span class='maininfo' id='pers-x'></span>
@@ -55,7 +58,14 @@
 	}
 })();	
 
-	
+startBtn.addEventListener("click", function(){
+	if(isTrue){
+		isTrue=0;
+	}
+	else{
+		isTrue=1;
+	}
+});	
 let mzcolor =()=>{
 	for(let i=0;i<gridX;i++){
 		for(let j=0;j<gridY;j++){
@@ -76,7 +86,7 @@ let mzcolor =()=>{
 	}
 };
 	
-
+mzcolor();
 	
 let rect=(x,y,w,h,color)=>{
 	ctx.fillStyle=color;
@@ -133,12 +143,12 @@ let text =(x,y,cell,col)=>{
    		var ld=arr[this.posX-1][this.posY+1];//left-down
   		var dl=arr[this.posX][this.posY+1];//down
   		var rd=arr[this.posX+1][this.posY+1];//right-down
-  		console.log(this.posX,this.posY);
-  		console.log('------------------');
-  		console.log(lt,tl,rt);
-  		console.log(ll,8,rl);
-  		console.log(ld,dl,rd);
-  		console.log('==================');
+  		//console.log(this.posX,this.posY);
+  		//console.log('------------------');
+  		//console.log(lt,tl,rt);
+  		//console.log(ll,8,rl);
+  		//console.log(ld,dl,rd);
+  		//console.log('==================');
 		
 		if(this.x!==cordX || this.y!==cordY){
 		   if(this.x>cordX && arr[this.posX-1][this.posY]!==2){
@@ -167,10 +177,10 @@ let text =(x,y,cell,col)=>{
    
    };
 	
-	let player= new Unit();
+let player= new Unit();
 
 
-
+player.draw();
 
 
 canvas.oncontextmenu = function (e){
@@ -180,13 +190,13 @@ draw(e);
 	
 function draw(e) {
   
-   var dotx = Math.round(e.clientX - canvas.offsetLeft);
+	var dotx = Math.round(e.clientX - canvas.offsetLeft);
     var doty = Math.round(e.clientY - canvas.offsetTop);
  
-  var xcell = Math.floor(dotx / (grid));
-  var ycell = Math.floor(doty / (grid));
-  ctx.fillRect((xcell) * grid, (ycell) * grid, grid, grid);
-  arr[xcell][ycell]=2;
+  	var xcell = Math.floor(dotx / (grid));
+  	var ycell = Math.floor(doty / (grid));
+  	ctx.fillRect((xcell) * grid, (ycell) * grid, grid, grid);
+  	arr[xcell][ycell]=2;
   
 }
 	
@@ -205,15 +215,16 @@ canvas.onclick=(e)=>{
 
     
 	
-	
+let isTrue=0;	
 		
 	
 	
 setInterval(()=>{
-	ctx.clearRect(0,0,width,height);
-    mzcolor();
-	player.draw();
-	
+	if(isTrue){
+		ctx.clearRect(0,0,width,height);
+   		mzcolor();
+		player.draw();
+	}
 	},30);	
 	
 
