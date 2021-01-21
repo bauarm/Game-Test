@@ -137,8 +137,8 @@ let text =(x,y,cell,col)=>{
         let arrSide=[]
         this.posX=Math.floor(this.x/grid);
    		this.posY=Math.floor(this.y/grid); 
-   		document.getElementById('pers-x').innerHTML = this.posX+1;
-  		document.getElementById('pers-y').innerHTML = this.posY+1;
+   		document.getElementById('pers-x').innerHTML = this.posX;
+  		document.getElementById('pers-y').innerHTML = this.posY;
    		//console.log(this.posX,this.posY)
    		var dotStay=arr[this.posX][this.posY];
    		//console.log(dotStay)
@@ -220,11 +220,15 @@ canvas.onclick=(e)=>{
   cordX=xcell*grid,cordY=ycell*grid; 
   rect((xcell*grid)+2,(ycell*grid)+2,grid-4,grid-4,"red")
   arr[xcell][ycell]=1;
-  document.getElementById('targ-x').innerHTML = xcell+1;
-  document.getElementById('targ-y').innerHTML = ycell+1;
+  document.getElementById('targ-x').innerHTML = xcell;
+  document.getElementById('targ-y').innerHTML = ycell;
 
-  document.getElementById('untarg-x').innerHTML = +((player.posX+1)- (xcell+1));
-  document.getElementById('untarg-y').innerHTML = +((player.posY+1)-(ycell+1));
+  document.getElementById('untarg-x').innerHTML = +((player.posX)- (xcell));
+	document.getElementById('untarg-y').innerHTML = +((player.posY)-(ycell));
+
+
+
+
 };
 
     
