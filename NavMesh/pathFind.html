@@ -30,6 +30,15 @@
     	<span class='comment'>У Цели:</span>
     	<span class='maininfo' id='targ-y'></span>
     	<br>
+
+    	<hr />
+		<br>
+    	<span class='comment'>До Х Цели:</span>
+    	<span class='maininfo' id='untarg-x'></span>
+    	<br>
+    	<span class='comment'>До У Цели:</span>
+    	<span class='maininfo' id='untarg-y'></span>
+    	<br>
 	</section>
 	<canvas id="canvas"></canvas>
     <script type="text/javascript">
@@ -183,6 +192,8 @@ let player= new Unit();
 player.draw();
 
 
+
+
 canvas.oncontextmenu = function (e){
 draw(e);
  return false;
@@ -207,10 +218,13 @@ canvas.onclick=(e)=>{
   let ycell = Math.floor(doty / (grid));
   let chec = arr[xcell][ycell];
   cordX=xcell*grid,cordY=ycell*grid; 
-  /*rect((xcell*grid)+2,(ycell*grid)+2,grid-4,grid-4,"red")
-  arr[xcell][ycell]=1;*/
+  rect((xcell*grid)+2,(ycell*grid)+2,grid-4,grid-4,"red")
+  arr[xcell][ycell]=1;
   document.getElementById('targ-x').innerHTML = xcell+1;
   document.getElementById('targ-y').innerHTML = ycell+1;
+
+  document.getElementById('untarg-x').innerHTML = +((player.posX+1)- (xcell+1));
+  document.getElementById('untarg-y').innerHTML = +((player.posY+1)-(ycell+1));
 };
 
     
