@@ -19,7 +19,7 @@ let arrCenter=[];
 
 let canvasSize=129;
 
-let chukSize=33;
+let chukSize=129;
 
 
 
@@ -41,8 +41,8 @@ function minmaxRand(min, max) {
   let wd = Math.floor(window.innerWidth/grid)*grid;//ширна видимой части экрана (сцены) кратная размеру клетки (1536/32=48 клеток)
 	let hg =Math.floor(window.innerHeight/grid)*grid;//высота видимой части экрана (сцены) кратная размеру клетки (768/32=24 клетки)
 	
-	let sizeSceneX=grid*canvasSize;//ширина сцены 
-  let sizeSceneY=grid*canvasSize///высота сцены
+	let sizeSceneX=grid*canvasSize;//ширина сцены 16*129 
+  let sizeSceneY=grid*canvasSize///высота сцены 16*129
 
   let sceneCellAmountX=sizeSceneX/grid;//количество клеток по ширине
   let sceneCellAmountY=sizeSceneY/grid;//количество клеток по высоте
@@ -54,11 +54,12 @@ function minmaxRand(min, max) {
 	
 	const ctx = canvas.getContext('2d');
    
+
 let arrGenerate=(arr,callback)=>{
-   for(i=0;i<33;i++)
+   for(i=0;i<chukSize;i++)
     {
       arr[i]=[]
-      for(j=0;j<33;j++)
+      for(j=0;j<chukSize;j++)
       {
         arr[i][j]=0;
       }

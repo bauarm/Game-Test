@@ -16,25 +16,35 @@
     	<span class='maininfo' id='fps-info'></span>
     	<br>
 
-    	<span class='comment'>Клеток по ширине:</span>
+    	<span class='comment'>Размер мира (клеток):</span>
+    	<span class='maininfo' id='wordsize-info'>256</span>
+    	<br>
+
+    	<span class='comment'>Клеток экрана по ширине:</span>
     	<span class='maininfo' id='scene-cell-x'></span>
     	<br>
-    	<span class='comment'>Клеток по высоте:</span>
+    	<span class='comment'>Клеток экрана по высоте:</span>
     	<span class='maininfo' id='scene-cell-y'></span>
     	<br>
     
-    	<span class='comment'>Ширина канваса:</span>
-    	<span class='maininfo' id='canva-size-x'></span>
-    	<br>
-    	<span class='comment'>Высота канваса:</span>
-    	<span class='maininfo' id='canva-size-y'></span>
-    	<br>
-
     	<span class='comment'>Х персонажа:</span>
     	<span class='maininfo' id='pers-x'></span>
     	<br>
     	<span class='comment'>У персонажа:</span>
     	<span class='maininfo' id='pers-y'></span>
+    	<br>
+        <hr>
+    	<span class='comment'>Х клетка мыши:</span>
+    	<span class='maininfo' id='mouse-x'></span>
+    	<br>
+    	<span class='comment'>У клетка мыши:</span>
+    	<span class='maininfo' id='mouse-y'></span>
+    	<br>
+    	<span class='comment'>Х мыши:</span>
+    	<span class='maininfo' id='mousecord-x'></span>
+    	<br>
+    	<span class='comment'>У мыши:</span>
+    	<span class='maininfo' id='mousecord-y'></span>
     	<br>
 
     </div>
@@ -43,27 +53,9 @@
     <script type="text/javascript">
 
 let grid =32;
+let worldSize=256;
 let arr=[];
 let step;
-/*
-var item = new Image();  
-        item.src = 'tileset01.png';
-
-function mossprot(name,cord,tran,gath,lif) {
-  this.name = name;
-	this.select=false;
-	this.wiev= cord;
-	this.trans= tran;
-	this.gather=gath;
-	this.lift=lif;
-}
-
-
-let moss1 = new mossprot("moss1",[grid*7,32],true,0,0);
-let moss2 = new mossprot("moss2",[grid*8,32],true,0,0);
-let moss3 = new mossprot("moss3",[grid*9,32],true,0,0);
-let mossArr=[moss1,moss2,moss3];
-*/
 
 //----- Технические функции
 function oneRand(arr){
@@ -85,14 +77,20 @@ function minmaxRand(min, max) {
   let wd = Math.floor(window.innerWidth/grid)*grid;//ширна видимой части экрана (сцены) кратная размеру клетки (1536/32=48 клеток)
   let hg =Math.floor(window.innerHeight/grid)*grid;//высота видимой части экрана (сцены) кратная размеру клетки (768/32=24 клетки)
 	
-	let sizeSceneX=wd-grid*6;;//ширина сцены 
+  
+
+  let sizeSceneX=wd-grid*6;;//ширина сцены 
   let sizeSceneY=hg;//высота сцены
 
   let sceneCellAmountX=sizeSceneX/grid;//количество клеток по ширине
   let sceneCellAmountY=sizeSceneY/grid;//количество клеток по высоте
   
-  document.getElementById('scene-cell-x').innerHTML = sceneCellAmountX;
-  document.getElementById('scene-cell-y').innerHTML = sceneCellAmountY;
+
+  function renovateInfo(){
+  	sceneCellAmountX=sizeSceneX/grid;
+  	sceneCellAmountY=sizeSceneY/grid;
+  }
+  
   
   //задание размера холста
 	canvas.width =sizeSceneX;
@@ -100,17 +98,14 @@ function minmaxRand(min, max) {
 	
 	const ctx = canvas.getContext('2d');
    
-	let width = grid*256, height = grid*256; //размер всего канваса по (втч невидимая часть) 32*320=10240
+	let width = grid*worldSize, height = grid*worldSize; //размер всего канваса по (втч невидимая часть) 32*320=10240
 	
 	let gridX =Math.floor(width/grid),gridY=Math.floor(height/grid);
-	document.getElementById('canva-size-x').innerHTML = gridX;
-  document.getElementById('canva-size-y').innerHTML = gridY;     
-    
+	
   canvas.style.backgroundColor = "#c8c864";
-  let cordX=(sizeSceneX/2);//центрированные на серидину обьекта сейчас перса) координаты
-  let cordY=(sizeSceneY/2);//центрированные на серидину обьекта сейчас перса) координаты
-  document.getElementById('pers-x').innerHTML = cordX + ' ' + cordX/grid;
-  document.getElementById('pers-y').innerHTML = cordY;  
+  let cordX=Math.floor(sizeSceneX/2/grid)*grid;//центрированные на серидину обьекта сейчас перса) координаты
+  let cordY=Math.floor(sizeSceneY/2/grid)*grid;//центрированные на серидину обьекта сейчас перса) координаты
+ 
     
     //console.log(gridX,gridY);
     //console.log(cordX,cordY);
@@ -118,10 +113,9 @@ function minmaxRand(min, max) {
 
 function getInform()
 {
-	document.getElementById('scene-cell-x').innerHTML = sceneCellAmountX;
+  renovateInfo();
+  document.getElementById('scene-cell-x').innerHTML = sceneCellAmountX;
   document.getElementById('scene-cell-y').innerHTML = sceneCellAmountY;
-  document.getElementById('canva-size-x').innerHTML = gridX;
-  document.getElementById('canva-size-y').innerHTML = gridY;
   document.getElementById('pers-x').innerHTML = cordX+ ' | ' + cordX/grid;
   document.getElementById('pers-y').innerHTML = cordY+ ' | ' + cordY/grid; 
 
@@ -143,38 +137,15 @@ function getInform()
 
 
 
-//----- Функция генерации нижнего (первого) ландшафта
+	
 
-
-function sowOneLayer(itArr,freq)
-{
-	let cordArr= itArr;
-	for (let i = 0; i < gridX; i++) 
-	{
-		for (let j = 0; j < gridY; j++)
-		{
-			let sptX=oneRand(cordArr);
-			frequency= minmaxRand(0, freq);
-			if(frequency===freq)
-			{
-				arr[i][j]=sptX;
-				ctx.drawImage(item, mossArr[0].wiev[0], mossArr[0].wiev[1], step, step ,i*step, j*step, step, step);
-					
-			}
-		}
-	}
-};
-
-//----------------------------------	
-
-// Отрисовка шахматного поля по ранее созданной матрице	
+// Отрисовка поля по ранее созданной матрице	
 
 let drawField =()=>{
 	for(i=0;i<gridX;i++){
 		for(j=0;j<gridY;j++){
 			let arch=arr[i][j];
 			if(arch==0){
-			//ctx.drawImage(item, mossArr[2].wiev[0], mossArr[2].wiev[1], grid, grid ,i*grid-cordX, j*grid-cordY, grid, grid);
 			ctx.fillStyle = "green";
 			ctx.fillRect(i*grid-cordX,j*grid-cordY,grid,grid);
 			}
@@ -184,33 +155,18 @@ let drawField =()=>{
 			if(arch==3){
 			//ctx.drawImage(item, mossArr[1].wiev[0], mossArr[2].wiev[1], grid, grid ,i*grid-cordX, j*grid-cordY, grid, grid);
 			}
-			/*
+			
 			if(arch=='&'){
-			ctx.fillStyle = "blue";
-			ctx.fillRect((i*grid-cordX)+(grid/2),j*grid-cordY,grid,grid);
-			}	*/			
+			//ctx.fillStyle = "blue";
+			//ctx.fillRect((i*grid-cordX)+(grid/2),j*grid-cordY,grid,grid);
+			}
+
 		}
 	}
 //console.log(gridX);
 };
 drawField();
-/*
-let drawField2 =()=>{
-	for(i=0;i<gridX;i++){
-		for(j=0;j<gridY;j++){
-			let arch=arr[i][j];
-			if(arch==0){
-			ctx.drawImage(item, mossArr[0].wiev[0], mossArr[0].wiev[1], step, step ,i*step, j*step, step, step);
-			//ctx.fillStyle = "black";
-			//ctx.fillRect(i*grid,j*grid,grid,grid);
 
-			//ctx.drawImage(item, sptX.wiev[0], sptX.wiev[1], step, step ,i*step, j*step, step, step);
-			}		
-		}
-	}
-};
-drawField2();*/
-//-----------------------------------------
 
 //Функция отрисовки квадрата
 let rect =(x,y,w,h,color)=>{
@@ -221,29 +177,21 @@ let rect =(x,y,w,h,color)=>{
 
 let Ball =function(){
     this.tileFrom =[1,1];
-		this.tileTo   =[1,1];
-		this.dimensions=[grid,grid];
-		//this.position  =[gridX,gridY];
-		this.position  =[gridX*grid/2,gridY*grid/2];
-		
-		//this.x=grid;
-		//this.y=grid;
-		//this.x=grid*2;
-        //this.y=grid*2;
-        //console.log(Math.floor(gridX/2)*grid,Math.floor(gridY/2)*grid);
-        this.speed=2;
-        this.xSpeed=0;
-        this.ySpeed=0;
-        this.sizeW=grid;
-        this.sizeH=grid;
+	this.tileTo   =[1,1];
+	this.dimensions=[grid,grid];
+	this.positionCord =[0,0];
+	this.positionCell =[0,0];
+	this.speed=2;
+    this.xSpeed=0;
+    this.ySpeed=0;
+    this.sizeW=grid;
+    this.sizeH=grid;
     };
 
 Ball.prototype.draw=function(){
-       rect(this.position[0],this.position[1],grid,grid,"blue");
-       //cordX=this.position[0],cordY=this.position[1];
-       //rect((canvas.width/2),(canvas.height/2),grid,grid,"blue");
-       //arr[Math.floor((canvas.width/2-grid/2)/grid)][Math.floor((canvas.height/2-grid/2)/grid)]='&';
-       //console.log(    Math.floor((canvas.width/2-grid/2)/grid),Math.floor((canvas.height/2-grid/2)/grid)   )//cordX,cordY
+       rect(this.positionCord[0],this.positionCord[1],grid,grid,"blue");
+       //arr[this.positionCell[0]][this.positionCell[1]]='&';
+       
     };
     
 Ball.prototype.moveKey=function(){
@@ -326,31 +274,24 @@ window.addEventListener("keydown", function(e){
         {
             case 37: 
                 direction.left = true;
-                this.xSpeed=-this.speed;
-				this.ySpeed=0;
-				cordX=cordX-32,cordY=cordY;
-					//console.log(cordX,cordY);
+                cordX=cordX-32,cordY=cordY;
+			    //ball.positionCell[0]=ball.positionCell[0]+grid;
+			    console.log("press left ",cordX,cordY);
                 break;
             case 38: 
                 direction.up = true;
-				this.xSpeed=0; //обнуление предъидушего направления
-                this.ySpeed=-this.speed;
-			    cordX=cordX,cordY=cordY-32;
-					//console.log(cordX,cordY);
+				cordX=cordX,cordY=cordY-32;
+				console.log("press up ",cordX,cordY);
                 break;
             case 39: 
                 direction.right = true;
-                this.xSpeed=this.speed;
-                this.ySpeed=0;
-			    cordX=cordX+32,cordY=cordY;
-					//console.log(cordX,cordY);
+                cordX=cordX+32,cordY=cordY;
+				console.log("press right ",cordX,cordY);
 				break;
             case 40: 
                 direction.down = true;
-                this.xSpeed=0;
-				this.ySpeed=this.speed;
-				cordX=cordX,cordY=cordY+32;
-					//console.log(cordX,cordY);
+                cordX=cordX,cordY=cordY+32;
+				console.log("press dowh ",cordX,cordY);
                 break;
             case 32: 
                 direction.stop = true;
@@ -405,9 +346,11 @@ function onWheel(event){
 	let point=16;
 	let step=grid;
 	let mashtabPoint = (event.deltaY);
+	console.log(mashtabPoint)
+	console.log(grid)
 	console.log('----------')
-	console.log('wd '+wd,' grid '+grid)
-	console.log(wd/grid)
+	//console.log('wd '+wd,' grid '+grid)
+	//console.log(wd/grid)
 	if(mashtabPoint>0 && grid<128 && grid>16){
 		step=step+point;
 		grid=step;
@@ -433,8 +376,7 @@ function onWheel(event){
 	else{
 	return;
 	}
-	//grid=grid+mashtabPoint;
-	//console.log(grid);
+	
 }
 
 
@@ -456,17 +398,8 @@ canvas.addEventListener('mousedown', e => {
 });
 
 */
-/*
-canvas.onmousemove = function(e) {
-		
-		var dotx = Math.round(e.clientX - canvas.offsetLeft);
-		var doty = Math.round(e.clientY - canvas.offsetTop);
-		mouseX=dotx, mouseY=doty;
-		mouseMoveTarget=e.originalTarget.id;
-		//console.log(e.originalTarget.id);
-	}
-*/
-// функция сдвига карты и ограничения краев
+
+
 //обработчик событий на движение мышки по карте
 
 let mouseX,mouseY;
@@ -474,14 +407,18 @@ let mouseX,mouseY;
 let speedShift=grid;
 
 canvas.addEventListener('mousemove', e => {
-  let dotx = Math.round(e.clientX - canvas.offsetLeft);
-	let doty = Math.round(e.clientY - canvas.offsetTop);
-  mouseX=dotx, mouseY=doty;
-  const wdh = canvas.width;
+  	let dotx = e.clientX - canvas.offsetLeft;
+	let doty = e.clientY - canvas.offsetTop;
+  	mouseX=dotx, mouseY=doty;
+  	const wdh = canvas.width;
 	const hgt = canvas.height;
-	let mouseMoveTarget=e.originalTarget.id;
-	//console.log('mousemove',dotx,doty);
-	//console.log(e.originalTarget.id);
+	document.getElementById('mouse-x').innerHTML = Math.floor(dotx/grid);
+    document.getElementById('mouse-y').innerHTML = Math.floor(doty/grid);
+    document.getElementById('mousecord-x').innerHTML = dotx;
+    document.getElementById('mousecord-y').innerHTML = doty;
+	//let mouseMoveTarget=e.originalTarget.id;
+	//console.log('mousemove',Math.round(dotx/grid),Math.round(doty/grid));
+	
 
 });
 //функция перетаскивания карт зажатой мышью
@@ -490,7 +427,7 @@ let isDown = false;
 canvas.addEventListener('mousedown', e => {
   isDown = true;
   let dotx = Math.round(e.clientX - canvas.offsetLeft);
-	let doty = Math.round(e.clientY - canvas.offsetTop);
+  let doty = Math.round(e.clientY - canvas.offsetTop);
   mouseX=dotx, mouseY=doty;
  	dx=dotx,dy=doty;
 	
@@ -517,6 +454,7 @@ function mousedownShifter(dx,dy){
 
 
 };
+
 function mapShifter(){
 	
 	
@@ -540,6 +478,8 @@ function mapShifter(){
 
 	//-----------------------------------------//
 	
+
+
 //-------------------Движок анимации---------------------//
 
 const nextGameStep=(function(){

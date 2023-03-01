@@ -1,0 +1,65 @@
+/*@import url(reset.css);*/
+
+body{
+  background: url('https://basik.ru/images/1920x1080_63/06.jpg');  
+	background-repeat: no-repeat;
+   background-position: 50% center;
+    background-size: cover;
+  background-attachment: fixed;
+}
+#canvas{
+  background-color: red;
+   cursor: crosshair;
+  position: absolute;
+  z-index: 1;
+}
+#canvas2{
+  
+   cursor: crosshair;
+  position: absolute;
+  z-index: 2;
+}
+
+.regul{
+   padding: 5px;
+  color: white;
+  position: absolute;
+  right:0;
+  background-color: RGBA(0, 0, 0, 0.4);
+  width: 50%;
+  z-index: 10;
+}
+.colormake{
+  padding: 5px;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  right:0;
+  background-color: RGBA(0, 0, 0, 0.4);
+  
+  z-index: 10;
+}
+.colorblock{
+  padding: 5px;
+  color: white;
+  position: absolute;
+  bottom: 30%;
+  right:0;
+  background-color: RGBA(0, 0, 0, 0.4);
+ 
+  z-index: 10;
+}
+#block1{
+  height: 20px;
+  width: 100%;
+}
+#info{
+  padding: 5px;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left:0;
+  background-color: RGBA(0, 0, 0, 0.4);
+  width: 20%;
+  z-index: 10;
+}

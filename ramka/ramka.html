@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript">
+    let gId = (id) => {
+        return document.getElementById(id);
+    };
+    arr=[];
+    const canvas = gId('canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth,
+	    height = window.innerHeight;
+    let grid =32, gridX =Math.floor(width/grid),gridY=Math.floor(height/grid);     
+    canvas.width = gridX*grid;
+    canvas.height = gridY*grid;
+    canvas.style.backgroundColor = "#D0D0D0";
+    
+//PAINT CANVAS GRID
+(()=>{
+    for(i=0;i<gridX;i++){
+		arr[i]=[]
+		for(j=0;j<gridY;j++){
+			arr[i][j]=0;
+		}
+	}
+})();
+	
+
+	
+let mzcolor =()=>{
+	for(i=0;i<gridX;i++){
+		for(j=0;j<gridY;j++){
+			let arch=arr[i][j];
+			if(arch==0){
+			ctx.strokeStyle = "white";
+			ctx.strokeRect(i*grid,j*grid,grid,grid);
+			}		
+			else if(arch==1){
+			ctx.fillStyle = "red";
+			ctx.fillRect(i*grid+2,j*grid+2,grid-4,grid-4);
+			}	
+			else if(arch==2){
+			ctx.fillStyle = "black";
+			ctx.fillRect(i*grid,j*grid,grid,grid);
+			}	
+		}
+	}
+};
+	
+let rect=(x,y,w,h,color)=>{
+	ctx.fillStyle=color;
+	ctx.fillRect(x,y,w,h);
+};
+let text =(x,y,cell,col)=>{
+	ctx.font = "20px serif";
+    ctx.fillStyle=col;
+    ctx.textBaseline = "bottom";
+    ctx.textAlign = "left";
+    ctx.fillText(cell, x, y);
+};  
+/*---------------------------------------*/
+var isDrawing = false;
+
+canvas.onmousedown =function(){
+  isDrawing = true;
+}
+canvas.onmouseup =function(){
+  cont=0;
+  tar=[];
+  ctx.clearRect(0,0,width,height);
+	 mzcolor();
+  isDrawing = false;
+}
+
+
+canvas.onmousemove = function(e) {
+     var dotx=Math.floor(e.clientX);
+     var doty=Math.floor(e.clientY);
+     var wdh = canvas.width;
+     var hgt = canvas.height;
+     
+     var xcell = Math.floor(dotx/grid);
+     var ycell = Math.floor(doty/grid);
+     
+    
+if (isDrawing == true)
+  {
+   if(e.which==1){draw(e); }  
+    }
+   else if(e.which==2){erase(e);  }
+};  
+
+var cont=0;
+var tar=[];
+
+function draw(e) {
+   
+	//console.log(ct)
+	var dotx = Math.floor(e.clientX - canvas.offsetLeft);
+    var doty = Math.floor(e.clientY - canvas.offsetTop);
+    if(cont<1){
+		var stx=dotx;
+	    var sty=doty;
+		tar.push(stx,sty)
+		cont=1;
+	  //console.log(cont,stx,sty)
+	}
+	
+    
+    var fx=dotx-tar[0],fy=doty-tar[1];
+	ctx.clearRect(0,0,width,height);
+    mzcolor();
+	
+	ctx.fillStyle = "rgba(0,0,0,0.4)";
+    ctx.fillRect(tar[0],tar[1],fx,fy);
+	
+	ctx.strokeStyle = "black";
+    ctx.strokeRect(tar[0],tar[1],fx,fy);
+	
+	
+	if(fx>0 && fy>0){
+	text(tar[0]+(fx/2),tar[1],Math.floor(fx/grid)+1,"blue");
+	text(tar[0]-25, tar[1]+(fy/2),Math.floor(fy/grid)+1,"blue");
+	}
+	else if(fx<0 && fy>0){
+		text(tar[0]+(fx/2),tar[1],Math.floor(-fx/grid)+1,"blue");
+	    text(dotx-25, doty-(fy/2),Math.floor(fy/grid)+1,"blue");
+	}
+	else if(fx<0 && fy<0){
+		text(dotx-(fx/2),doty,Math.floor(-fx/grid)+1,"blue");
+	    text(dotx-25, doty-(fy/2),Math.floor(-fy/grid)+1,"blue");
+	}
+	else if(fx>0 && fy<0){
+		text(dotx-(fx/2),doty,Math.floor(fx/grid)+1,"blue");
+	    text(tar[0]-25, tar[1]+(fy/2),Math.floor(-fy/grid)+1,"blue");
+	}
+	
+  }
+
+
+ var dotx=10;
+    var doty=10;
+  
+function draw2() {
+    
+   
+	var tcolor = "red";
+    
+    
+    dotx++,doty++;
+    
+	ctx.strokeStyle = "red";
+    ctx.strokeRect(10,10,dotx,doty);
+	console.log(dotx,doty)
+	/*ctx.fillStyle = tcolor;
+    ctx.fillRect((xcell-1)*grid,(ycell-1)*grid,grid-4,grid-4);*/
+    
+  }
+	
+	
+	
+	mzcolor();
+	
+	/*setInterval(()=>{
+	ctx.clearRect(0,0,width,height);
+    mzcolor();
+	 
+	
+	},30);*/
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body id="placeholder" onload="init()">
+    
+    <section id="rgl" class="regul">
+        <div id="slider1">
+            <span>Ширина</span>
+            <input id="wdh" type="range" min="128" max="1280" step="128" value="512"><span id="wv">512</span>
+        </div>
+        <div id="slider2">
+            <span>Высота</span>
+            <input id="hgt" type="range" min="128" max="1280" step="128" value="512"><span id="hv">512</span>
+        </div>
+        <div id="slider3">
+            <span>Шаг ячейки</span>
+            <input id="fram_step" type="range" min="4" max="48" step="4" value="16"><span id="fv">16</span>
+        </div>
+    </section>
+    
+    <section id="clmk" class="colormake">
+        <div id="slider1">
+            <span>R</span>
+            <input id="r" type="range" min="0" max="255" step="1" value="170">
+            <span id="rv">170</span>
+        </div>
+        <div id="slider2">
+            <span>G</span>
+            <input id="g" type="range" min="0" max="255" step="1" value="110">
+            <span id="gv">110</span>
+        </div>
+        <div id="slider3">
+            <span>B</span>
+            <input id="b" type="range" min="0" max="255" step="1" value="40">
+            <span id="bv">40</span>
+        </div>
+        <div id="slider4">
+            <span>A</span>
+            <input id="a" type="range" min="0.1" max="1" step="0.01" value="0.8">
+            <span id="av">0.8</span>
+        </div>
+    </section>
+    <section id="clrbl" class="colorblock">
+        <span>Цвет блока</span>
+        <div id="slblock1">
+            <span>R</span>
+            <input id="br" type="range" min="0" max="255" step="1" value="0">
+            <span id="brv">170</span>
+        </div>
+        <div id="slblock2">
+            <span>G</span>
+            <input id="bg" type="range" min="0" max="255" step="1" value="0">
+            <span id="bgv">110</span>
+        </div>
+        <div id="slblock3">
+            <span>B</span>
+            <input id="bb" type="range" min="0" max="255" step="1" value="200">
+            <span id="bbv">40</span>
+        </div>
+        <div id="slblock4">
+            <span>A</span>
+            <input id="ba" type="range" min="0.1" max="1" step="0.01" value="1">
+            <span id="bav">0.8</span>
+        </div>
+        <div id="block1">
+        </div>
+    </section>
+    <section id="info">
+        <div id="arri">
+        </div>
+        <div id="cord">
+            X0:Y0
+        </div>
+        <div id="cell">
+            16
+        </div>
+    </section>
+    <canvas id="canvas"></canvas>
+<script src="js/main.js"></script>
+<script src="js/erase.js"></script>
+</body>
+
+</html>

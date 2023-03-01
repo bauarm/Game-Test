@@ -72,22 +72,66 @@ function minmaxRand(min, max) {
 	
   const canvas = gId('canvas');
   
-  let wd = Math.floor(window.innerWidth/grid)*grid;//ширна видимой части экрана (сцены) кратная размеру клетки (1536/32=48 клеток)
-	let hg =Math.floor(window.innerHeight/grid)*grid;//высота видимой части экрана (сцены) кратная размеру клетки (768/32=24 клетки)
+  let wd = Math.floor(window.innerWidth/grid);
+	let hg =Math.floor(window.innerHeight/grid);
 	
-	let sizeSceneX=grid*40;//ширина сцены 
-  let sizeSceneY=grid*28///высота сцены
+	console.log('-----')
+	console.log('new ',wd,hg)
+	
+	let midWd,midHd;
+	
+	if(!(wd%2)){
+		midWd=wd/2;
+		wd-=1;
+	}
+	else{
+		midWd=Math.ceil(wd/2);
+	}
+	
+	if(!(hg%2)){
+		midHd=hg/2;
+		hg-=1;
+	}
+	else{
+		midHd=Math.ceil(hg/2);
+	}
 
-  let sceneCellAmountX=sizeSceneX/grid;//количество клеток по ширине
-  let sceneCellAmountY=sizeSceneY/grid;//количество клеток по высоте
+	console.log('change ',wd,hg);
+	console.log('middle ',midWd,midHd);
+	
+	//midWd=Math.floor(wd/2),midHd=Math.floor(hg/2);
+	
+	//console.log(midWd,midHd);
+	/*
+	if(!(midWd%2)){
+		midWd+=1;
+	}
+	if(!(midHd%2)){
+		midHd+=1;
+	}
+
+	console.log(midWd,midHd);
+	*/
+	
+	
+	let sizeSceneX=grid*wd;//ширина сцены 
+  let sizeSceneY=grid*hg///высота сцены
+
+  //let sceneCellAmountX=sizeSceneX/grid;//количество клеток по ширине
+  //let sceneCellAmountY=sizeSceneY/grid;//количество клеток по высоте
   
-  document.getElementById('scene-cell-x').innerHTML = sceneCellAmountX;
-  document.getElementById('scene-cell-y').innerHTML = sceneCellAmountY;
+  //document.getElementById('scene-cell-x').innerHTML = sceneCellAmountX;
+  //document.getElementById('scene-cell-y').innerHTML = sceneCellAmountY;
   
   //задание размера холста
 	canvas.width =sizeSceneX;
 	canvas.height =sizeSceneY;
 	
+	console.log('Canvas Size ',canvas.width,canvas.height);
+	console.log('Canvas Cells ',canvas.width/grid,canvas.height/grid);
+
+	
+
 	const ctx = canvas.getContext('2d');
    
 	let width = grid*40; height = grid*28; //размер всего канваса по (втч невидимая часть) 32*320=10240
@@ -112,16 +156,19 @@ function minmaxRand(min, max) {
   document.getElementById('pers-x').innerHTML = cordX + ' ' + cordX/grid;
   document.getElementById('pers-y').innerHTML = cordY;  
     
-    //console.log(gridX,gridY);
-    //console.log(cordX,cordY);
+   
     
+rect((midWd*grid)-grid,(midHd*grid)-grid,grid,grid,'blue');
+
+console.log(midWd*grid,midHd*grid);
+//console.log(cordX,cordY);
 
 //Создание матрицы ландшафта
 (()=>{
-    for(i=0;i<gridX;i++)
+    for(i=0;i<129;i++)
     {
 			arr[i]=[]
-			for(j=0;j<gridY;j++)
+			for(j=0;j<129;j++)
 			{
 				arr[i][j]=minmaxRand(0, 3);
 			}
@@ -130,7 +177,11 @@ function minmaxRand(min, max) {
 //console.log(arr); //вывод матрицы в консолль
 
 
+canvas.addEventListener('click',showevent);
 
+function showevent(){
+	console.log(arguments)
+}
 
 
 // Отрисовка поля по ранее созданной матрице	
@@ -175,115 +226,11 @@ function getInform()
 
 	
 //Функция отрисовки квадрата
-let rect =(x,y,w,h,color)=>{
+function rect(x,y,w,h,color){
 		ctx.fillStyle=color;
 		ctx.fillRect(x,y,w,h);
 	};
 //---------------------------
-
-let Ball =function(){
-    this.tileFrom =[1,1];
-		this.tileTo   =[1,1];
-		this.dimensions=[grid,grid];
-		//this.position  =[gridX,gridY];
-		this.position  =[gridX*grid/2,gridY*grid/2];
-		
-		//this.x=grid;
-		//this.y=grid;
-		//this.x=grid*2;
-        //this.y=grid*2;
-        //console.log(Math.floor(gridX/2)*grid,Math.floor(gridY/2)*grid);
-        this.speed=2;
-        this.xSpeed=0;
-        this.ySpeed=0;
-        this.sizeW=grid;
-        this.sizeH=grid;
-    };
-
-Ball.prototype.draw=function(){
-  //rect(cordX,cordY,grid,grid,"blue");
-  //arr[cordX/grid][cordY/grid]=3;
-  document.getElementById('pers-x').innerHTML = cordX+ ' | ' + cordX/grid;
-  document.getElementById('pers-y').innerHTML = cordY+ ' | ' + cordY/grid;
-};
-    
-
-
-	
-	
-let ball= new Ball();
-    
-let direction = {
-        left: false,
-        up: false,
-        right: false,
-        down: false,
-        stop: false
-    };
-
-window.addEventListener("keydown", function(e){
-    switch(e.keyCode)
-        {
-        case 37: 
-        	direction.left = true;
-         	this.xSpeed=-this.speed;
-					this.ySpeed=0;
-					cordX=cordX-grid,cordY=cordY;
-					gapCellX=gapCellX-1,gapCellY=gapCellY;
-					//console.log(cordX,cordY);
-          break;
-        case 38: 
-          direction.up = true;
-					this.xSpeed=0; //обнуление предъидушего направления
-          this.ySpeed=-this.speed;
-			    cordX=cordX,cordY=cordY-32;
-					gapCellX=gapCellX,gapCellY=gapCellY-1;
-					//console.log(cordX,cordY);
-          break;
-        case 39: 
-          direction.right = true;
-          this.xSpeed=this.speed;
-          this.ySpeed=0;
-			    cordX=cordX+32,cordY=cordY;
-					gapCellX=gapCellX+1,gapCellY=gapCellY;
-					//console.log(cordX,cordY);
-					break;
-        case 40: 
-          direction.down = true;
-          this.xSpeed=0;
-					this.ySpeed=this.speed;
-					cordX=cordX,cordY=cordY+32;
-					gapCellX=gapCellX,gapCellY=gapCellY+1;
-					//console.log(cordX,cordY);
-          break;
-        case 32: 
-          direction.stop = true;
-          break;
-        }
-    }, false);
-
-window.addEventListener("keyup", function(e){
-        switch(e.keyCode)
-        {
-            case 37: 
-                direction.left = false;
-                break;
-            case 38: 
-                direction.up = false;
-                break;
-            case 39: 
-                direction.right = false;
-                break;
-            case 40: 
-                direction.down = false;
-                break;
-           case 32: 
-                direction.stop = false;
-                break;
-        }
-    }, false);
-
-
 
 
 
@@ -324,7 +271,7 @@ function game(){
   nextGameStep(game);
 	ctx.clearRect(0,0,canvas.width,canvas.height);
   getInform();
-  ball.draw();
+  //ball.draw();
 	//mapShifter();
 	
   drawField();

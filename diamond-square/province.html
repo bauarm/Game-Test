@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="onwhell.css">
+	<title>Document</title>
+</head>
+
+<body>
+   <div>
+        <button id='startBtn'>Set Tribes</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    
+
+    
+
+    <script type="text/javascript">
+let grid =32;
+
+
+//крайние точки должны быть с запретом на экспансию
+
+
+//----- Технические функции
+function oneRand(arr){
+	  var pos = arr.length-1;
+	  var num = minmaxRand(0, pos);
+	  return arr[num];
+	}
+function minmaxRand(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+//-----------------------------------------------    
+	let gId = (id) => {
+        return document.getElementById(id);
+    };
+//-----------------------------------------------    
+	
+  const canvas = gId('canvas');
+  
+  let wd = Math.floor(window.innerWidth/grid)*grid;//ширна видимой части экрана (сцены) кратная размеру клетки (1536/32=48 клеток)
+	let hg =Math.floor(window.innerHeight/grid)*grid;//высота видимой части экрана (сцены) кратная размеру клетки (768/32=24 клетки)
+	
+	let sizeSceneX=grid*17;//ширина сцены 
+  let sizeSceneY=grid*17///высота сцены
+
+  let sceneCellAmountX=sizeSceneX/grid;//количество клеток по ширине
+  let sceneCellAmountY=sizeSceneY/grid;//количество клеток по высоте
+  
+  canvas.width =sizeSceneX;
+  canvas.height =sizeSceneY;
+  
+ 
+	
+	const ctx = canvas.getContext('2d');
+   
+
+// Переменная размер поля	
+let SizeMatrix=17; 
+// Массив где хранятся значения всех клеток матрицы
+let arr=[];
+
+//Нполнение матрицы значениями благополучия территории от 1 до 10
+//данное значение добавляется во внутренний массив первым. Второе значение это номер племени что владеет этим квуадратом 
+// по умолчанию это ноль
+((s)=>{
+    for(i=0;i<s;i++)
+    {
+			arr[i]=[]
+			for(j=0;j<s;j++)
+			{
+				arr[i][j]=[minmaxRand(1, 10),0];
+			}
+		}
+})(SizeMatrix);
+console.log(arr); //вывод матрицы в консолль
+
+// Отрисовка поля квадратами по ранее созданной матрице	
+let drawField =()=>{
+	
+	for(i=0;i<arr.length;i++){
+		for(j=0;j<arr.length;j++){
+			ctx.strokeRect(i*grid, j*grid, grid, grid);
+      ctx.font = "10px Ubuntu";
+      ctx.fillStyle = "red";
+        //ctx.textAlign = "center";
+      ctx.fillText(arr[i][j][0], i*grid+4, j*grid+20);
+		}
+	}
+};
+
+drawField()
+
+//Подсчет максимально благополучных территорий для заселения первых племен
+let countBestFields =()=>{ 
+  let count=0
+  for(i=0;i<arr.length;i++){
+    for(j=0;j<arr.length;j++){
+      if(arr[i][j][0]>8){
+        count=count+1;
+
+      }
+    }
+  }
+  return Math.floor(count/5);
+};
+
+
+//массив племен ид племени, его территории, его цвет
+let tribes=[]
+//массив с племена уже занесенными на карту
+let tribesOnMap=[]
+
+function generateTribes(){
+  arrColor=[]
+  arrName=[]
+  countStartFields=countBestFields()
+  //console.log('start generateTribes')
+  for(i=0;i<countStartFields;i++){
+    
+    arrColor[i]=getColor();
+    arrName[i]=minmaxRand(100, 900);
+    //console.log(arrColor[i],arrName[i]);
+    tribes.push([arrColor[i],arrName[i],0]);
+    
+  }
+  
+  return countStartFields;
+  
+}
+
+//выбор случайной точки на карте для генерации племени
+//Второе значение в массиве это ИД племени которое контролирует данный квадрат
+let setTribe =()=>{ //setTribe()
+  let passStep=3;
+  
+  let count=0;
+  let tribesCount=generateTribes()
+  for(i=2;i<arr.length-2;i++){
+    for(j=2;j<arr.length-2;j++){
+      //console.log(arr[i][j]);
+      if(arr[i][j][0]>8 && arr[i][j][1]==0 && count<tribesCount && passStep==0){
+        
+        arr[i][j][1]=tribes[count][1];//занесение в массив данных о владельце клетки
+        
+        tribesOnMap.push([tribes[count][0],tribes[count][1],[[i,j]]]);   //1.цвет племени 2.имя племени 3.массив с владениями племени
+       
+        
+        ctx.fillStyle=tribes[count][0];
+        ctx.fillRect(i*grid,j*grid,grid,grid);
+        ctx.font = "14px Ubuntu";
+        ctx.fillStyle = "white";
+        //ctx.textAlign = "center";
+        ctx.fillText(tribes[count][1], i*grid+4, j*grid+20);
+        
+        count=count+1;
+        passStep=3;}
+      if(arr[i][j][0]>8 && arr[i][j][1]==0 && count<tribesCount && passStep>0){
+        passStep--;}
+
+      }
+    }
+  
+
+
+  /*
+  let n = 0;
+  while (n < tribesCount) {
+    console.log(n)
+    let x=minmaxRand(2, arr.length-2)
+    let y=minmaxRand(2, arr.length-2)
+    if(arr[x][y][0]>8 && arr[x][y][0]==0){
+      console.log(x,y); //вывод точки спавна племени в консоль
+      ctx.fillStyle=tribes[n][0];
+      ctx.fillRect(x*grid,y*grid,grid,grid);
+      n++;
+      //добавить адрес територии в массив трайбес
+    }
+
+}*/
+  
+  
+  
+    
+  
+  
+};
+
+function getColor(){
+  let r=minmaxRand(0, 255);
+  let g=minmaxRand(0, 255);
+  let b=minmaxRand(0, 255);
+  color=`rgba(${r}, ${g} ,${b}, 255)`;
+  return color;
+}
+
+
+
+
+
+
+function netxStep(){
+  for(let i=0;i<tribesOnMap.length;i++){
+    console.log(' ===== '+i+' ===== ');
+    //console.log(tribesOnMap[i][0]);
+    console.log('Племя '+tribesOnMap[i][1]);
+    //console.log(tribesOnMap[i][2]);
+   
+    checkNear(tribesOnMap[i][2]);
+    //console.log('-------------');
+    
+}
+return 'netxStep end'
+
+};
+
+function checkNear(arrPos){ //checkNear()
+  arrNear=[]
+  //console.log(arrPos.length)
+  
+  for(let q=0;q<arrPos.length;q++){
+      let x=arrPos[q][0]
+      let y=arrPos[q][1]
+      arrNear.push([arr[x][y][1]],[])
+      //console.log(q);
+      if(arr[x][y+1][1]==0){
+        //arrNear[q][1].push(arr[x][y+1][0])
+        console.log(arr[x][y+1][0]+' '+arr[x][y+1][1]);
+      }
+      if(arr[x][y-1][1]==0){
+        //arrNear[q][1].push(arr[x][y-1][0])
+        console.log(arr[x][y-1][0]+' '+arr[x][y+1][1]);
+      }
+      if(arr[x+1][y][1]==0){
+        //arrNear[q][1].push(arr[x+1][y][0])
+        console.log(arr[x+1][y][0]+' '+arr[x][y+1][1]);
+      }
+      if(arr[x-1][y][1]==0){
+        //arrNear[q][1].push(arr[x-1][y][0])
+        console.log(arr[x-1][y][0]+' '+arr[x][y+1][1]);
+      }
+
+  }
+  console.log(arrNear)
+};
+
+
+
+startBtn.addEventListener("click", function(){
+  
+  setTribe();
+}); 
+
+
+function showInfoTribes(){
+  
+}
+
+	
+	</script>
+</body>
+
+</html>
